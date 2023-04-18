@@ -1,0 +1,1730 @@
+{
+  "info": {
+    "title": "360 Beds24 API",
+    "version": "1.0.0",
+    "description": "Beds24 API"
+  },
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "http://localhost:3000/dev"
+    },
+    {
+      "url": "https://dev.api.360suites.com.br/beds24"
+    },
+    {
+      "url": "https://homolog.api.360suites.com.br/beds24"
+    },
+    {
+      "url": "https://api.360suites.com.br/beds24"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization"
+      },
+      "XApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    }
+  },
+  "paths": {
+    "/auth-api/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Return access token, user id and refresh token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "email@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Senha@2022"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access Token"
+          }
+        }
+      }
+    },
+    "/client-testimony-api/": {
+      "post": {
+        "tags": [
+          "ClientTestimonyApi"
+        ],
+        "summary": "Create Testimony",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "author": {
+                    "type": "string",
+                    "example": "Jonh Doe"
+                  },
+                  "testimony": {
+                    "type": "string",
+                    "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                  },
+                  "order": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON ClientTestimonyApi"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ClientTestimonyApi"
+        ],
+        "summary": "Return list of testimonials",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON ClientTestimonyApi"
+          }
+        }
+      }
+    },
+    "/client-testimony-api/update-testimony/{id}": {
+      "put": {
+        "tags": [
+          "ClientTestimonyApi"
+        ],
+        "summary": "Update testimony",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "author": {
+                    "type": "string",
+                    "example": "Jane Doe"
+                  },
+                  "testimony": {
+                    "type": "string",
+                    "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                  },
+                  "order": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON ClientTestimonyApi"
+          }
+        }
+      }
+    },
+    "/client-testimony-api/{id}": {
+      "delete": {
+        "tags": [
+          "ClientTestimonyApi"
+        ],
+        "summary": "Delete testimony",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON ClientTestimonyApi"
+          }
+        }
+      }
+    },
+    "/exchange-token/": {
+      "post": {
+        "tags": [
+          "ExchangeTokenAPI"
+        ],
+        "summary": "Exhange authorization token from Beds24",
+        "responses": {
+          "200": {
+            "description": "Token exchanged"
+          }
+        }
+      }
+    },
+    "/featured-room-api/": {
+      "post": {
+        "tags": [
+          "FeaturedRoomApi"
+        ],
+        "summary": "Create Featured Room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "room_id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "property_id": {
+                    "type": "number",
+                    "example": 2
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/featured-room-api/list-featured-room/": {
+      "get": {
+        "tags": [
+          "FeaturedRoomApi"
+        ],
+        "summary": "Return list of featured rooms",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/featured-room-api/update-featured/": {
+      "put": {
+        "tags": [
+          "FeaturedRoomApi"
+        ],
+        "summary": "Update featured room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "room_id": {
+                      "type": "number",
+                      "example": 2
+                    },
+                    "order": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                },
+                "room": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 2
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Suite 1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/featured-room-api/{id}": {
+      "delete": {
+        "tags": [
+          "FeaturedRoomApi"
+        ],
+        "summary": "Delete featured room",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/features-api/": {
+      "post": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Create Featured Room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "feature": {
+                    "type": "string",
+                    "example": "BEDROOM"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "fa-solid fa-bed"
+                  },
+                  "is_highlight": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "is_installation": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "friendly_name": {
+                    "type": "string",
+                    "example": "Bedroom"
+                  },
+                  "category": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "filter": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Return list of features",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      }
+    },
+    "/features-api/features-by-category": {
+      "get": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Return a group of categories",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      }
+    },
+    "/features-api/feature-by-id/{id}": {
+      "get": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Return features by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      }
+    },
+    "/features-api/update-features/{id}": {
+      "put": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Update features",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "feature": {
+                    "type": "string",
+                    "example": "bedroom"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "fa-solid fa-bed"
+                  },
+                  "is_highlight": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "is_installation": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "friendly_name": {
+                    "type": "string",
+                    "example": "Bedroom"
+                  },
+                  "category": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "filter": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      }
+    },
+    "/features-api/{id}": {
+      "delete": {
+        "tags": [
+          "FeaturesApi"
+        ],
+        "summary": "Delete featured room",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesApi"
+          }
+        }
+      }
+    },
+    "/features-api/highlight/{id}": {
+      "put": {
+        "tags": [
+          "FeaturesByHighlightApi"
+        ],
+        "summary": "Update features in highlight",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "is_highlight": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesByHighlightApi"
+          }
+        }
+      }
+    },
+    "/features-api/filter/{id}": {
+      "put": {
+        "tags": [
+          "FeaturesByHighlightApi"
+        ],
+        "summary": "Update features in filter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filter": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesByHighlightApi"
+          }
+        }
+      }
+    },
+    "/features-categories-api/": {
+      "post": {
+        "tags": [
+          "FeaturesCategoriesApi"
+        ],
+        "summary": "Create Features Categories",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "example": "Cozinha"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesCategoriesApi"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "FeaturesCategoriesApi"
+        ],
+        "summary": "Return list of features",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesCategoriesApi"
+          }
+        }
+      }
+    },
+    "/features-categories-api/update-features-categories/{id}": {
+      "put": {
+        "tags": [
+          "FeaturesCategoriesApi"
+        ],
+        "summary": "Update features categories",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "example": "Serviços"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesCategoriesApi"
+          }
+        }
+      }
+    },
+    "/features-categories-api/{id}": {
+      "delete": {
+        "tags": [
+          "FeaturesCategoriesApi"
+        ],
+        "summary": "Delete featured Categories",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturesCategoriesApi"
+          }
+        }
+      }
+    },
+    "/hook/bookings": {
+      "post": {
+        "tags": [
+          "WebhookAPI"
+        ],
+        "summary": "Forward webhook requests to others subscribed apis",
+        "responses": {
+          "200": {
+            "description": "JSON WebhookAPI"
+          }
+        }
+      }
+    },
+    "/hook/properties": {
+      "post": {
+        "tags": [
+          "WebhookAPI"
+        ],
+        "summary": "Forward webhook requests to others subscribed apis",
+        "responses": {
+          "200": {
+            "description": "JSON WebhookAPI"
+          }
+        }
+      }
+    },
+    "/subscribe/": {
+      "post": {
+        "tags": [
+          "WebhookAPI"
+        ],
+        "summary": "Subscribes to webhook",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "example": "https://my-api.360suites.com.br/my-hook"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "BOOKING"
+                  },
+                  "requestType": {
+                    "type": "string",
+                    "example": "GET"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/mail-api/mail": {
+      "post": {
+        "tags": [
+          "MailAPI"
+        ],
+        "summary": "Broadcasts multiple e-mails",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "csv": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "CSV file containg list of e-mails."
+                  },
+                  "subject": {
+                    "type": "string",
+                    "description": "e-mail subject."
+                  },
+                  "htmlTemplate": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "html file that will be sent."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok if e-mails were sent sucessfully"
+          }
+        }
+      }
+    },
+    "/power-bi-api/get-token": {
+      "get": {
+        "tags": [
+          "PowerBi"
+        ],
+        "summary": "Return Power Bi token and report id",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON do PowerBi"
+          }
+        }
+      }
+    },
+    "/property-api/": {
+      "get": {
+        "tags": [
+          "PropertyApi"
+        ],
+        "summary": "Return list of property",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON PropertyApi"
+          }
+        }
+      }
+    },
+    "/room-api/list-room/{property_id}": {
+      "get": {
+        "tags": [
+          "Room"
+        ],
+        "summary": "Return list of rooms",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "property_id",
+            "type": "integer"
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of rooms"
+          }
+        }
+      }
+    },
+    "/room-features-api/": {
+      "post": {
+        "tags": [
+          "RoomFeaturesApi"
+        ],
+        "summary": "Create room features by array",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "feature_id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "room_id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "order": {
+                      "type": "integer",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/room-features-api/by-property-id/{property_id}": {
+      "post": {
+        "tags": [
+          "RoomFeaturesApi"
+        ],
+        "summary": "Create room features by property id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "property_id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "feature_id": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "order": {
+                      "type": "integer",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON FeaturedRoomApi"
+          }
+        }
+      }
+    },
+    "/room-features-api/by-property-id/{id}": {
+      "get": {
+        "tags": [
+          "RoomFeaturesApi"
+        ],
+        "summary": "Get room features by property id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON RoomFeaturesApi"
+          }
+        }
+      }
+    },
+    "/sync/booking": {
+      "post": {
+        "tags": [
+          "SyncAPI"
+        ],
+        "summary": "Syncs incoming booking",
+        "responses": {
+          "200": {
+            "description": "Running sync"
+          }
+        }
+      }
+    },
+    "/sync/property": {
+      "post": {
+        "tags": [
+          "SyncAPI"
+        ],
+        "summary": "Syncs incoming property",
+        "responses": {
+          "200": {
+            "description": "Running sync"
+          }
+        }
+      }
+    },
+    "/sync/properties": {
+      "post": {
+        "tags": [
+          "SyncAPI"
+        ],
+        "summary": "Syncs all properties",
+        "responses": {
+          "200": "description:Running sync"
+        }
+      }
+    },
+    "/user-api/": {
+      "post": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Create user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_report_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "full_name": {
+                    "type": "string",
+                    "example": "Jonh Doe"
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "example": "ACME SA"
+                  },
+                  "phantasy_name": {
+                    "type": "string",
+                    "example": "ACME SA"
+                  },
+                  "cpf": {
+                    "type": "string",
+                    "example": 12345678900
+                  },
+                  "cnpj": {
+                    "type": "string",
+                    "example": 12345678900
+                  },
+                  "cellphone": {
+                    "type": "string",
+                    "example": 11911111111
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johm@teste.com"
+                  },
+                  "type_person": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  },
+                  "is_enabled": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "is_housi": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Update user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_report_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "full_name": {
+                    "type": "string",
+                    "example": "Jonh Doe"
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "example": "ACME SA"
+                  },
+                  "phantasy_name": {
+                    "type": "string",
+                    "example": "ACME SA"
+                  },
+                  "cpf": {
+                    "type": "string",
+                    "example": 12345678900
+                  },
+                  "cnpj": {
+                    "type": "string",
+                    "example": 12345678900
+                  },
+                  "cellphone": {
+                    "type": "string",
+                    "example": 11911111111
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "johm@teste.com"
+                  },
+                  "type_person": {
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  },
+                  "is_enabled": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Return User data list",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/user-api/{id}": {
+      "get": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Return user data by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/user-api/disable-user/{id}": {
+      "put": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Disable user on investors portal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/user-api/enable-user/{id}": {
+      "put": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Enable user on investors portal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/user-api/resend-password/{id}": {
+      "get": {
+        "tags": [
+          "UserApi"
+        ],
+        "summary": "Resend temporary user password for investors portal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON UserApi"
+          }
+        }
+      }
+    },
+    "/voucher-api/": {
+      "post": {
+        "tags": [
+          "VoucherApi"
+        ],
+        "summary": "Create voucher",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "VERAO15"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "O desconto não se aplica a taxas ou custos adicionais. Válido para reservas realizadas até o final de Março e com período de estadia concluído até o final de 31/12/2023."
+                  },
+                  "type": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 99.99
+                  },
+                  "start_date": {
+                    "type": "date",
+                    "example": "01-01-2023"
+                  },
+                  "end_date": {
+                    "type": "date",
+                    "example": "01-06-2023"
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON VoucherApi"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "VoucherApi"
+        ],
+        "summary": "Return list of vouchers",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON VoucherApi"
+          }
+        }
+      }
+    },
+    "/voucher-api/filter": {},
+    "post": {
+      "tags": [
+        "VoucherApi"
+      ],
+      "summary": "Get filtered vouchers",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "properties": {
+                "type": {
+                  "type": "number",
+                  "example": 1
+                },
+                "start_discount": {
+                  "type": "number",
+                  "example": 99.99
+                },
+                "end_discount": {
+                  "type": "number",
+                  "example": 99.99
+                },
+                "end_date": {
+                  "type": "date",
+                  "example": "01-06-2023"
+                },
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "JSON VoucherApi"
+        }
+      }
+    },
+    "/voucher-api/type": {},
+    "get": {
+      "tags": [
+        "VoucherApi"
+      ],
+      "summary": "Get all types of vouchers",
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "JSON VoucherApi"
+        }
+      }
+    },
+    "/voucher-api/{id}": {
+      "put": {
+        "tags": [
+          "VoucherApi"
+        ],
+        "summary": "Create voucher",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "FERIAS20"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "O desconto não se aplica a taxas ou custos adicionais. Aplicável somente em sua primeira locação. Válido até 28/02/2023"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "Percent"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 99.99
+                  },
+                  "start_date": {
+                    "type": "date",
+                    "example": "01-01-2023"
+                  },
+                  "end_date": {
+                    "type": "date",
+                    "example": "28-02-2023"
+                  },
+                  "status": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON VoucherApi"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "VoucherApi"
+        ],
+        "summary": "Delete voucher",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON VoucherApi"
+          }
+        }
+      }
+    },
+    "/voucher-api/status/{id}": {
+      "put": {
+        "tags": [
+          "VoucherApi"
+        ],
+        "summary": "Update voucher status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON VoucherApi"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Auth das APIs"
+    },
+    {
+      "name": "ClientTestimonytApi",
+      "description": "Client Testimony Api"
+    },
+    {
+      "name": "Sync API",
+      "description": "Sync API"
+    },
+    {
+      "name": "FeaturedRoomApi",
+      "description": "Featured Room Api"
+    },
+    {
+      "name": "FeaturesApi",
+      "description": "Features Api"
+    },
+    {
+      "name": "FeaturesCategoriesApi",
+      "description": "Features Categories Api"
+    },
+    {
+      "name": "Webhook API",
+      "description": "Webhook API"
+    },
+    {
+      "name": "Mail",
+      "description": "Mail API"
+    },
+    {
+      "name": "PowerBi",
+      "description": "PowerBi API"
+    },
+    {
+      "name": "PropertyApi",
+      "description": "APIs de Property."
+    },
+    {
+      "name": "UserApi",
+      "description": "User Api"
+    },
+    {
+      "name": "VoucherApi",
+      "description": "Voucher Api"
+    }
+  ]
+}
