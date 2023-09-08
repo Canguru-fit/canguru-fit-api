@@ -18,22 +18,22 @@ import * as diligencesService from './diligencesService';
  *          200:
  *              description: Token exchanged
  */
-export const create = async (_req: Request, res: Response): Promise<Response> => {
-    return res.send(await diligencesService.create());
+export const create = async (req: Request, res: Response): Promise<Response> => {
+    return res.send(await diligencesService.create(req.body));
 };
 
 export const read = async (_req: Request, res: Response): Promise<Response> => {
   return res.send(await diligencesService.read());
 };
 
-export const readOne = async (_req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.readOne());
+export const readOne = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.readOne(req.params.id));
 };
 
-export const update = async (_req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.update());
+export const update = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.update(req.params.id, req.body));
 };
 
-export const remove = async (_req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.remove());
+export const remove = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.remove(req.params.id));
 };
