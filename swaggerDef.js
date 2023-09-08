@@ -1,8 +1,8 @@
 module.exports = {
     info: {
-      title: '360 Beds24 API',
+      title: 'E-Closing API',
       version: '1.0.0',
-      description: 'Beds24 API',
+      description: 'E-Closing API',
     },
     openapi: '3.0.0',
     servers: [
@@ -10,13 +10,13 @@ module.exports = {
         url: 'http://localhost:3000/dev',
       },
       {
-        url: 'https://dev.api.360suites.com.br/beds24',
+        url: 'https://dev.api-eclosing.quill.com.br/v1',
       },
       {
-        url: 'https://homolog.api.360suites.com.br/beds24',
+        url: 'https://homolog.api-eclosing.quill.com.br/v1',
       },
       {
-        url: 'https://api.360suites.com.br/beds24',
+        url: 'https://api-eclosing.quill.com.br/v1',
       },
     ],
     apis: ['./src/functions/**/*.ts'],

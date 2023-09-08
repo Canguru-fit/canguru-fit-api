@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyEventV2, Context } from 'aws-lambda';
 import { generateHandler } from '@libs/handler-resolver';
-import routes from './hookRouter';
+import routes from './diligencesRouter';
 import mongoose from 'mongoose';
 
 export const run: any = async (event: APIGatewayProxyEvent | APIGatewayProxyEventV2, context: Context) => {

@@ -1,12 +1,12 @@
 const envs = {
     dev: {
-        domain: 'dev.api.360suites.com.br',
+        domain: 'dev.api-eclosing.quill.com.br',
     },
     homolog: {
-        domain: 'homolog.api.360suites.com.br',
+        domain: 'homolog.api-eclosing.quill.com.br',
     },
     prod: {
-        domain: 'api.360suites.com.br',
+        domain: 'api-eclosing.quill.com.br',
     },
 };
 

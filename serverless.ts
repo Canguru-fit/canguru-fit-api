@@ -12,6 +12,7 @@ const serverlessConfiguration: AWS = {
         'serverless-offline',
         'serverless-domain-manager',
         'serverless-express',
+        'serverless-deployment-bucket',
         'serverless-apigw-binary',
     ],
     useDotenv: true,
@@ -22,9 +23,12 @@ const serverlessConfiguration: AWS = {
             minimumCompressionSize: 1024,
             shouldStartNameWithService: true,
         },
-        timeout: 360,
+        tracing: {
+          apiGateway: true,
+          lambda: true,
+        },
+        timeout: 30,
         environment: {
-            // AWS_REGION: process.env.AWS_REGION,
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
             NODE_ENV: process.env.NODE_ENV,
@@ -48,7 +52,7 @@ const serverlessConfiguration: AWS = {
         customDomain: {
             domainName: env[process.env.NODE_ENV || 'dev'].domain,
             stage: process.env.NODE_ENV,
-            basePath: 'beds24-api',
+            basePath: 'v1',
             createRoute53Record: true,
         },
         apigwBinary: {
