@@ -1,6 +1,6 @@
 import { Schema, InferSchemaType, model } from 'mongoose';
 
-let legalPerson = new Schema(
+const legalPerson = new Schema(
   {
     name: String,
     email: String,
@@ -9,12 +9,10 @@ let legalPerson = new Schema(
   },
   {
     collection: 'LegallPersons',
-    timestamps: true
+    timestamps: true,
   }
 );
 
-export type LegallPerson = InferSchemaType<typeof legalPerson>;
+export type LegalPerson = InferSchemaType<typeof legalPerson>;
 
 export default model('legalPerson', legalPerson);
-
-

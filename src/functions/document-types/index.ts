@@ -7,13 +7,13 @@ export default {
     {
       http: {
         method: 'any',
-        path: 'diligences',
+        path: 'document-types',
       },
     },
     {
       http: {
         method: 'any',
-        path: 'diligences/{proxy+}',
+        path: 'document-types/{proxy+}',
       },
     },
   ],

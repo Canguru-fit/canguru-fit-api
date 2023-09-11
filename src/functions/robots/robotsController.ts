@@ -1,39 +1,39 @@
 import { Request, Response } from 'express';
-import * as diligencesService from './diligencesService';
+import * as robotsService from './robotsService';
 
 /**
  *  @swagger
  *  tags:
- *      name: Diligences API
- *      description: diligences API
+ *      name: Robots API
+ *      description: robots API
  */
 /**
  *  @swagger
  *
- *  /diligences
+ *  /robots
  *  post:
- *      tags: [diligencesAPI]
- *      summary: Creates a new diligence
+ *      tags: [robotsAPI]
+ *      summary: Creates a new robot
  *      responses:
  *          200:
- *              description: Token exchanged
+ *              description: robot created
  */
 export const create = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.create(req.body));
+  return res.send(await robotsService.create(req.body));
 };
 
 export const read = async (_req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.read());
+  return res.send(await robotsService.read());
 };
 
 export const readOne = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.readOne(req.params.id));
+  return res.send(await robotsService.readOne(req.params.id));
 };
 
 export const update = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.update(req.params.id, req.body));
+  return res.send(await robotsService.update(req.params.id, req.body));
 };
 
 export const remove = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.remove(req.params.id));
+  return res.send(await robotsService.remove(req.params.id));
 };

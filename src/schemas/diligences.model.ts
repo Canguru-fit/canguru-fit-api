@@ -1,29 +1,31 @@
 import { Schema, InferSchemaType, model } from 'mongoose';
 
-let diligence = new Schema(
+const diligence = new Schema(
   {
     stauts: {
       type: String,
-      enum: ['NEW', 'IN PROGRESS', 'COMPLETED']
+      enum: ['NEW', 'IN PROGRESS', 'COMPLETED'],
     },
     name: String,
-    naturalPersons : [{
-      type: Schema.Types.ObjectId,
-      ref: 'naturalPerson'
-    }],
-    legalPersons : [{
-      type: Schema.Types.ObjectId,
-      ref: 'legalPerson'
-    }]
+    naturalPersons: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'naturalPerson',
+      },
+    ],
+    legalPersons: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'legalPerson',
+      },
+    ],
   },
   {
     collection: 'Diligences',
-    timestamps: true
+    timestamps: true,
   }
 );
 
 export type Diligence = InferSchemaType<typeof diligence>;
 
 export default model('diligence', diligence);
-
-

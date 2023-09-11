@@ -1,5 +1,7 @@
 {
   "extends": [
+    "standard",
+    "eslint:recommended",
     "airbnb-base",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -55,7 +57,11 @@
     ]
   },
   "parser": "@typescript-eslint/parser",
-  "env": {},
+  "env": {
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
   "overrides": [],
   "settings": {
     "import/resolver": {
@@ -67,11 +73,19 @@
         "map": [
           [
             "@src",
-            "./app"
+            "./src"
           ],
           [
-            "@queries",
-            "./queries"
+            "@functions",
+            "./src/functions"
+          ],
+          [
+            "@libs",
+            "./src/libs"
+          ],
+          [
+            "@schemas",
+            "./src/schemas"
           ]
         ],
         "extensions": [
