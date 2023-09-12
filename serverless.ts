@@ -14,6 +14,7 @@ const serverlessConfiguration: AWS = {
     'serverless-express',
     'serverless-deployment-bucket',
     'serverless-apigw-binary',
+    'serverless-dotenv-plugin',
   ],
   console: true,
   useDotenv: true,
