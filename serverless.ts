@@ -22,6 +22,9 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs16.x',
     versionFunctions: false,
+    deploymentBucket: {
+      name: 'quill-serverless-framework',
+    },
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
