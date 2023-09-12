@@ -10,7 +10,7 @@ import * as naturalPersonsService from './naturalPersonsService';
 /**
  *  @swagger
  *
- *  /diligences/natural-persons
+ *  /diligences/natural-persons/:
  *  post:
  *      tags: [NaturalPersonsAPI]
  *      summary: Creates a new natural person

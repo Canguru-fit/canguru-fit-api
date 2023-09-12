@@ -1,11 +1,19 @@
+import naturalPersonsModel from '@schemas/naturalPersons.model';
+import legalPersonsModel from '@schemas/legalPersons.model';
 import diligencesModel, { Diligence } from '../../schemas/diligences.model';
 
 export const read = async (): Promise<Diligence[]> => {
-  return diligencesModel.find();
+  return diligencesModel
+    .find()
+    .populate({ path: 'naturalPersons', model: naturalPersonsModel })
+    .populate({ path: 'legalPersons', model: legalPersonsModel });
 };
 
 export const readOne = async (id: string): Promise<Diligence> => {
-  return diligencesModel.findById(id);
+  return diligencesModel
+    .findById(id)
+    .populate({ path: 'naturalPersons', model: naturalPersonsModel })
+    .populate({ path: 'legalPersons', model: legalPersonsModel });
 };
 
 export const create = async (diligence: Diligence): Promise<Diligence> => {

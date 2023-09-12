@@ -10,7 +10,7 @@ import * as diligencesService from './diligencesService';
 /**
  *  @swagger
  *
- *  /diligences
+ *  /diligences:
  *  post:
  *      tags: [diligencesAPI]
  *      summary: Creates a new diligence

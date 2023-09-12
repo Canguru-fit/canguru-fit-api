@@ -10,7 +10,7 @@ import * as legalPersonsService from './legalPersonsService';
 /**
  *  @swagger
  *
- *  /diligences/legal-persons
+ *  /diligences/legal-persons/:
  *  post:
  *      tags: [LegalPersonsAPI]
  *      summary: Creates a new legal person

@@ -1,11 +1,12 @@
-import documentTypesModel, { DocumentType } from '../../schemas/documentTypes';
+import documentTypesModel, { DocumentType } from '../../schemas/documentTypes.model';
+import robotsModel from '../../schemas/robots.model';
 
 export const read = async (): Promise<DocumentType[]> => {
-  return documentTypesModel.find();
+  return documentTypesModel.find().populate({ path: 'robot', model: robotsModel });
 };
 
 export const readOne = async (id: string): Promise<DocumentType> => {
-  return documentTypesModel.findById(id);
+  return documentTypesModel.findById(id).populate({ path: 'robot', model: robotsModel });
 };
 
 export const create = async (documentType: DocumentType): Promise<DocumentType> => {

@@ -10,7 +10,7 @@ import * as robotsService from './robotsService';
 /**
  *  @swagger
  *
- *  /robots
+ *  /robots/:
  *  post:
  *      tags: [robotsAPI]
  *      summary: Creates a new robot

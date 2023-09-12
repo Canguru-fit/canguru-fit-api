@@ -10,7 +10,7 @@ import * as documentTypesService from './documentTypesService';
 /**
  *  @swagger
  *
- *  /document-types
+ *  /document-types/:
  *  post:
  *      tags: [DocumentTypesAPI]
  *      summary: Creates a new documentType
