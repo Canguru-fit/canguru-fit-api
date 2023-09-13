@@ -5,14 +5,17 @@ const naturalPersonDoc = new Schema(
     name: String,
     filePath: String,
     protocol: String,
-    collectionStatus: String,
+    status: String,
+    statusText: String,
+    analysisStatus: String,
+    analysisDescription: String,
     diligence: {
       type: Schema.Types.ObjectId,
       ref: 'diligence',
     },
-    naturalPerson: {
+    type: {
       type: Schema.Types.ObjectId,
-      ref: 'naturalPerson',
+      ref: 'documentType',
     },
   },
   {

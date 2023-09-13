@@ -6,6 +6,16 @@ const legalPerson = new Schema(
     email: String,
     cnpj: String,
     phone: String,
+    diligence: {
+      type: Schema.Types.ObjectId,
+      ref: 'diligence',
+    },
+    documents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'legalPersonDocs',
+      },
+    ],
   },
   {
     collection: 'LegallPersons',

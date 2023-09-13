@@ -37,3 +37,13 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
 export const remove = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await diligencesService.remove(req.params.id));
 };
+
+export const collect = async (req: Request, res: Response): Promise<Response> => {
+  const { entity } = req.body;
+  return res.send(await diligencesService.collect(req.body, entity));
+};
+
+export const status = async (req: Request, res: Response): Promise<Response> => {
+  const { entity } = req.body;
+  return res.send(await diligencesService.status(req.body, entity));
+};

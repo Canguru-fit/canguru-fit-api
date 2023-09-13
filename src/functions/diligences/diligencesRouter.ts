@@ -25,4 +25,7 @@ router.get('/natural-persons/:id', naturalPersonsController.read);
 router.put('/natural-persons/:id', naturalPersonsController.update);
 router.delete('/natural-persons/:id', naturalPersonsController.remove);
 
+router.post('/documents/collect', diligencesController.collect);
+router.post('/documents/status', diligencesController.status);
+
 export default router;

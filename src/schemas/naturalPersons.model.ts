@@ -13,6 +13,16 @@ const naturalPerson = new Schema(
       type: String,
       enum: ['MALE', 'FEMALE'],
     },
+    diligence: {
+      type: Schema.Types.ObjectId,
+      ref: 'diligence',
+    },
+    documents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'naturalPersonDocs',
+      },
+    ],
   },
   {
     collection: 'NaturalPersons',

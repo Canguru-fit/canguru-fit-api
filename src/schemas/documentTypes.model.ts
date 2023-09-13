@@ -13,18 +13,6 @@ const documentType = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'robot',
     },
-    naturalPersons: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'naturalPerson',
-      },
-    ],
-    legalPersons: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'legalPerson',
-      },
-    ],
   },
   {
     collection: 'DocumentTypes',
