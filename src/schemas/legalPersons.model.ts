@@ -18,7 +18,7 @@ const legalPerson = new Schema(
     ],
   },
   {
-    collection: 'LegallPersons',
+    collection: 'LegalPersons',
     timestamps: true,
   }
 );

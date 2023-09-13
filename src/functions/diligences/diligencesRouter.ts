@@ -15,13 +15,15 @@ router.delete('/:id', diligencesController.remove);
 
 // legal-person
 router.post('/legal-persons', legalPersonsController.create);
-router.get('/legal-persons/:id', legalPersonsController.read);
+router.get('/legal-persons/all', legalPersonsController.read);
+router.get('/legal-persons/:id', legalPersonsController.readOne);
 router.put('/legal-persons/:id', legalPersonsController.update);
 router.delete('/legal-persons/:id', legalPersonsController.remove);
 
 // natural-person
 router.post('/natural-persons', naturalPersonsController.create);
-router.get('/natural-persons/:id', naturalPersonsController.read);
+router.get('/natural-persons/all', naturalPersonsController.read);
+router.get('/natural-persons/:id', naturalPersonsController.readOne);
 router.put('/natural-persons/:id', naturalPersonsController.update);
 router.delete('/natural-persons/:id', naturalPersonsController.remove);
 
