@@ -45,7 +45,7 @@ export const create = async (naturalPerson: NaturalPerson): Promise<NaturalPerso
 
   const diligence = await diligencesModel.findById(naturalPerson.diligence);
 
-  diligence.legalPersons.push(newNaturalPerson.id);
+  diligence.naturalPersons.push(newNaturalPerson.id);
 
   await diligence.save();
 
