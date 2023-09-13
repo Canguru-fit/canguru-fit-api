@@ -112,7 +112,7 @@ export const status = async (
   }
   const [res] = await refreshRobot([newDocument.protocol]);
   newDocument.filePath = res.path
-    ? await s3CopyObjectCommand(res.path, `documents/${newDocument.id}/${newDocument.name}.pdf`)
+    ? await s3CopyObjectCommand(res.path, `documents/${newDocument.id}/${newDocument.name}`)
     : res.path;
   newDocument.analysisStatus = res.evaluation;
   newDocument.status = res.status_id;

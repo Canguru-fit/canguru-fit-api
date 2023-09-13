@@ -6,11 +6,16 @@ const client = new S3Client({ region: process.env.AWS_REGION });
 
 const s3Bucket = process.env.BUCKET_NAME;
 
-export const s3CopyObjectCommand = async (CopySource: string, Key: string, Bucket: string = s3Bucket) => {
+export const s3CopyObjectCommand = async (CopySource: string, Name: string, Bucket: string = s3Bucket) => {
+  const ext = CopySource.split('.').pop();
+  const Key = `${Name}.${ext}`;
+  const ContentType = ext === 'pdf' ? 'application/pdf' : `image/${ext}`;
+
   const command = new CopyObjectCommand({
     CopySource,
     Bucket,
     Key,
+    ContentType,
   });
 
   try {
@@ -22,9 +27,12 @@ export const s3CopyObjectCommand = async (CopySource: string, Key: string, Bucke
 };
 
 export const s3GetSignedUrl = async (Key: string, Bucket: string = s3Bucket) => {
+  const ext = Key.split('.').pop();
+  const ResponseContentType = ext === 'pdf' ? 'application/pdf' : `image/${ext}`;
   const getObjectParams = {
     Bucket,
     Key,
+    ResponseContentType,
   };
   const command = new GetObjectCommand(getObjectParams);
   return getSignedUrl(client, command, { expiresIn: 3600 });
