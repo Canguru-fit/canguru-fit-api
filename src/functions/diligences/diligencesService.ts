@@ -4,6 +4,7 @@ import naturalPersonDocsModel, { NaturalPersonDoc } from '@schemas/naturalPerson
 import documentTypesModel from '@schemas/documentTypes.model';
 import legalPersonDocsModel, { LegalPersonDoc } from '@schemas/legalPersonDocs.model';
 import diligencesModel, { Diligence } from '@schemas/diligences.model';
+import { s3CopyObjectCommand, s3GetSignedUrl } from '@libs/s3Utils';
 import { refreshRobot, startRobot } from '../../apis/robots';
 
 export const read = async (): Promise<Diligence[]> => {
@@ -110,10 +111,27 @@ export const status = async (
     newDocument = await legalPersonDocsModel.findById(document.id);
   }
   const [res] = await refreshRobot([newDocument.protocol]);
-  newDocument.filePath = res.path;
+  newDocument.filePath = res.path
+    ? await s3CopyObjectCommand(res.path, `documents/${newDocument.id}/${newDocument.name}.pdf`)
+    : res.path;
   newDocument.analysisStatus = res.evaluation;
   newDocument.status = res.status_id;
   newDocument.statusText = res.status;
 
   return newDocument.save();
+};
+
+export const document = async (
+  document: (NaturalPersonDoc & { id: string }) | (LegalPersonDoc & { id: string }),
+  entity: string
+): Promise<{ url: string }> => {
+  let foundDocument = null;
+  if (entity === 'NATURAL PERSON') {
+    foundDocument = await naturalPersonDocsModel.findById(document.id);
+  } else {
+    foundDocument = await legalPersonDocsModel.findById(document.id);
+  }
+
+  const url = await s3GetSignedUrl(foundDocument.filePath);
+  return { url };
 };

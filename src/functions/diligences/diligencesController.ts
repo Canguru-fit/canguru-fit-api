@@ -47,3 +47,8 @@ export const status = async (req: Request, res: Response): Promise<Response> => 
   const { entity } = req.body;
   return res.send(await diligencesService.status(req.body, entity));
 };
+
+export const document = async (req: Request, res: Response): Promise<Response> => {
+  const { entity } = req.body;
+  return res.send(await diligencesService.document(req.body, entity));
+};

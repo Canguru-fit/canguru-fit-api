@@ -39,7 +39,20 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       NODE_ENV: process.env.NODE_ENV,
       MONGODB_URL: process.env.MONGODB_URL,
+      BUCKET_NAME: process.env.BUCKET_NAME,
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: ['s3:*'],
+        Resource: [
+          `arn:aws:s3:::eclosing-diligences/*`,
+          `arn:aws:s3:::homolog-eclosing-diligences/*`,
+          `arn:aws:s3:::dev-eclosing-diligences/*`,
+          `arn:aws:s3:::dev-quill-diligence-app-bucket/*`,
+        ],
+      },
+    ],
   },
   // import the function via paths
   functions,
