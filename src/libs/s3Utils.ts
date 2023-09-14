@@ -16,6 +16,7 @@ export const s3CopyObjectCommand = async (CopySource: string, Name: string, Buck
     Bucket,
     Key,
     ContentType,
+    ContentDisposition: 'inline',
   });
 
   try {
