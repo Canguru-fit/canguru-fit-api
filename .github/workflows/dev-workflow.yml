@@ -10,6 +10,7 @@ env:
   NODE_ENV: ${{ secrets.NODE_ENV }}
   MONGODB_URL: ${{ secrets.MONGODB_URL }}
   BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+  AWS_COGNITO_POOL_ID: ${{secrets.AWS_COGNITO_POOL_ID}}
 
 jobs:
   deploy:

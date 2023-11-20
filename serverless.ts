@@ -15,6 +15,7 @@ const serverlessConfiguration: AWS = {
     'serverless-deployment-bucket',
     'serverless-apigw-binary',
     'serverless-dotenv-plugin',
+    'serverless-plugin-additional-stacks',
   ],
   console: true,
   useDotenv: true,
@@ -40,8 +41,14 @@ const serverlessConfiguration: AWS = {
       NODE_ENV: process.env.NODE_ENV,
       MONGODB_URL: process.env.MONGODB_URL,
       BUCKET_NAME: process.env.BUCKET_NAME,
+      AWS_COGNITO_POOL_ID: process.env.AWS_COGNITO_POOL_ID,
     },
     iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: ['cognito-idp:*'],
+        Resource: `arn:aws:cognito-idp:us-east-1:513932968775:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
+      },
       {
         Effect: 'Allow',
         Action: ['s3:*'],
@@ -76,6 +83,107 @@ const serverlessConfiguration: AWS = {
     },
     apigwBinary: {
       types: ['*/*'],
+    },
+    additionalStacks: {
+      cognito: {
+        Resources: {
+          CognitoUserPool: {
+            Type: 'AWS::Cognito::UserPool',
+            Properties: {
+              AccountRecoverySetting: {
+                RecoveryMechanisms: [
+                  {
+                    Name: 'verified_email',
+                    Priority: 1,
+                  },
+                ],
+              },
+              UserPoolName: process.env.NODE_ENV !== 'prod' ? `quill-${process.env.NODE_ENV}` : 'quill',
+              UsernameAttributes: ['email'],
+              AutoVerifiedAttributes: ['email'],
+              UsernameConfiguration: {
+                CaseSensitive: false,
+              },
+              VerificationMessageTemplate: {
+                DefaultEmailOption: 'CONFIRM_WITH_LINK',
+                EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail. {##Verify Email##} ',
+                EmailSubjectByLink: 'Quill - confirmação de e-mail',
+              },
+              Schema: [
+                {
+                  AttributeDataType: 'String',
+                  Mutable: true,
+                  Name: 'email',
+                  Required: true,
+                },
+              ],
+              Policies: {
+                PasswordPolicy: {
+                  MinimumLength: 6,
+                  RequireLowercase: false,
+                  RequireNumbers: false,
+                  RequireSymbols: false,
+                  RequireUppercase: false,
+                  TemporaryPasswordValidityDays: 7,
+                },
+              },
+            },
+          },
+          CognitoUserPoolClient: {
+            Type: 'AWS::Cognito::UserPoolClient',
+            // DependsOn: ['CognitoIdentityProviderGoogle', 'CognitoIdentityProviderFacebook'],
+            DependsOn: [],
+            Properties: {
+              AccessTokenValidity: 180,
+              IdTokenValidity: 180,
+              RefreshTokenValidity: 30,
+              AllowedOAuthFlows: ['implicit'],
+              AllowedOAuthFlowsUserPoolClient: true,
+              AllowedOAuthScopes: ['aws.cognito.signin.user.admin', 'email', 'openid', 'profile'],
+              CallbackURLs:
+                process.env.NODE_ENV !== 'prod'
+                  ? ['http://localhost:3000/', 'https://dev.quill.com.br', 'https://homolog.quill.com.br']
+                  : ['https://quill.com.br'],
+              LogoutURLs:
+                process.env.NODE_ENV !== 'prod'
+                  ? [
+                      'http://localhost:3000/login',
+                      'https://dev.quill.com.br/login',
+                      'https://homolog.quill.com.br/login',
+                    ]
+                  : ['https://quill.com.br/login'],
+              ClientName: process.env.NODE_ENV !== 'prod' ? `quill-${process.env.NODE_ENV}` : 'quill',
+              PreventUserExistenceErrors: 'LEGACY',
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+              ExplicitAuthFlows: [
+                'ALLOW_USER_PASSWORD_AUTH',
+                'ALLOW_REFRESH_TOKEN_AUTH',
+                'ALLOW_USER_SRP_AUTH',
+                'ALLOW_ADMIN_USER_PASSWORD_AUTH',
+              ],
+              GenerateSecret: false,
+              // SupportedIdentityProviders: ['COGNITO', 'Facebook', 'Google'],
+              SupportedIdentityProviders: ['COGNITO'],
+              TokenValidityUnits: {
+                AccessToken: 'minutes',
+                IdToken: 'minutes',
+                RefreshToken: 'days',
+              },
+            },
+          },
+          CognitoUserPoolDomain: {
+            Type: 'AWS::Cognito::UserPoolDomain',
+            Properties: {
+              Domain: `quill-${process.env.NODE_ENV}`,
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+            },
+          },
+        },
+      },
     },
   },
 };
