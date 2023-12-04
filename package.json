@@ -4,8 +4,7 @@
   "description": "API for Beds24 sync",
   "main": "serverless.ts",
   "scripts": {
-    "start": "yarn serverless offline",
-    "serve": "nodemon -e js,ts,yml --ignore node_modules --ignore build --exec serverless offline",
+    "start": "nodemon -e js,ts,yml --ignore node_modules --ignore build --exec serverless offline",
     "lint": "eslint . --ext .ts",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",

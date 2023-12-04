@@ -7,16 +7,14 @@ const diligence = new Schema(
       enum: ['NEW', 'IN PROGRESS', 'COMPLETED'],
     },
     name: String,
-    naturalPersons: [
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
+    entities: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'naturalPerson',
-      },
-    ],
-    legalPersons: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'legalPerson',
+        ref: 'entity',
       },
     ],
   },

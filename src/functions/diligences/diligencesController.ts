@@ -39,16 +39,13 @@ export const remove = async (req: Request, res: Response): Promise<Response> => 
 };
 
 export const collect = async (req: Request, res: Response): Promise<Response> => {
-  const { entity } = req.body;
-  return res.send(await diligencesService.collect(req.body, entity));
+  return res.send(await diligencesService.collect(req.body));
 };
 
 export const status = async (req: Request, res: Response): Promise<Response> => {
-  const { entity } = req.body;
-  return res.send(await diligencesService.status(req.body, entity));
+  return res.send(await diligencesService.status(req.body));
 };
 
 export const document = async (req: Request, res: Response): Promise<Response> => {
-  const { entity } = req.body;
-  return res.send(await diligencesService.document(req.body, entity));
+  return res.send(await diligencesService.document(req.body));
 };

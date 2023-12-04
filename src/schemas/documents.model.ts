@@ -1,6 +1,6 @@
 import { Schema, InferSchemaType, model } from 'mongoose';
 
-const naturalPersonDoc = new Schema(
+const document = new Schema(
   {
     name: String,
     filePath: String,
@@ -19,11 +19,11 @@ const naturalPersonDoc = new Schema(
     },
   },
   {
-    collection: 'NaturalPersonDocs',
+    collection: 'Documents',
     timestamps: true,
   }
 );
 
-export type NaturalPersonDoc = InferSchemaType<typeof naturalPersonDoc>;
+export type Document = InferSchemaType<typeof document>;
 
-export default model('naturalPersonDoc', naturalPersonDoc);
+export default model('document', document);

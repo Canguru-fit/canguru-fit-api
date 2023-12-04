@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import * as diligencesController from './diligencesController';
-import * as legalPersonsController from '../legalPersons/ legalPersonsController';
-import * as naturalPersonsController from '../naturalPersons/naturalPersonsController';
+import * as entitiesController from '../entities/entitiesController';
 import 'express-async-errors';
 
 const router = Router();
@@ -13,19 +12,11 @@ router.post('', diligencesController.create);
 router.put('/:id', diligencesController.update);
 router.delete('/:id', diligencesController.remove);
 
-// legal-person
-router.post('/legal-persons', legalPersonsController.create);
-router.get('/legal-persons/all', legalPersonsController.read);
-router.get('/legal-persons/:id', legalPersonsController.readOne);
-router.put('/legal-persons/:id', legalPersonsController.update);
-router.delete('/legal-persons/:id', legalPersonsController.remove);
-
-// natural-person
-router.post('/natural-persons', naturalPersonsController.create);
-router.get('/natural-persons/all', naturalPersonsController.read);
-router.get('/natural-persons/:id', naturalPersonsController.readOne);
-router.put('/natural-persons/:id', naturalPersonsController.update);
-router.delete('/natural-persons/:id', naturalPersonsController.remove);
+router.post('/entities', entitiesController.create);
+router.get('/', entitiesController.read);
+router.get('/:id', entitiesController.readOne);
+router.put('/:id', entitiesController.update);
+router.delete('/:id', entitiesController.remove);
 
 router.post('/documents/collect', diligencesController.collect);
 router.post('/documents/status', diligencesController.status);

@@ -1,21 +1,21 @@
 import documentTypesModel from '@schemas/documentTypes.model';
 import diligencesModel from '@schemas/diligences.model';
-import legalPersonModel, { LegalPerson } from '../../schemas/legalPersons.model';
-import documentsModel from '../../schemas/legalPersonDocs.model';
+import entityModel, { Entity } from '../../schemas/entities.model';
+import documentsModel from '../../schemas/documents.model';
 
-export const read = async (): Promise<LegalPerson[]> => {
-  return legalPersonModel
+export const read = async (): Promise<Entity[]> => {
+  return entityModel
     .find()
     .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } });
 };
 
-export const readOne = async (id: string): Promise<LegalPerson> => {
-  return legalPersonModel
+export const readOne = async (id: string): Promise<Entity> => {
+  return entityModel
     .findById(id)
     .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } });
 };
 
-export const create = async (legalPerson: LegalPerson): Promise<LegalPerson> => {
+export const create = async (entity: Entity): Promise<Entity> => {
   const documentTypes = await documentTypesModel.find({ entity: 'LEGAL PERSON' });
 
   const documents = documentTypes.map((documentType) => {
@@ -27,7 +27,7 @@ export const create = async (legalPerson: LegalPerson): Promise<LegalPerson> => 
       statusText: '',
       analysisStatus: '',
       analysisDescription: '',
-      diligence: legalPerson.diligence,
+      diligence: entity.diligence,
       type: documentType.id,
     };
   });
@@ -35,27 +35,27 @@ export const create = async (legalPerson: LegalPerson): Promise<LegalPerson> => 
   const newDocuments = await documentsModel.insertMany(documents);
 
   // eslint-disable-next-line no-param-reassign
-  legalPerson.documents = await newDocuments.map((doc) => doc.id);
+  entity.documents = newDocuments.map((doc) => doc.id);
 
-  const newlegalPerson = await legalPersonModel.create(legalPerson);
+  const newEntity = await entityModel.create(entity);
 
-  const diligence = await diligencesModel.findById(legalPerson.diligence);
+  const diligence = await diligencesModel.findById(entity.diligence);
 
-  diligence.legalPersons.push(newlegalPerson.id);
+  diligence.entities.push(newEntity.id);
 
   await diligence.save();
 
-  return newlegalPerson.populate({
+  return newEntity.populate({
     path: 'documents',
     model: documentsModel,
     populate: { path: 'type', model: documentTypesModel },
   });
 };
 
-export const update = async (_id: string, LegalPerson: LegalPerson): Promise<LegalPerson> => {
-  return legalPersonModel.findOneAndUpdate({ _id }, LegalPerson);
+export const update = async (_id: string, entity: Entity): Promise<Entity> => {
+  return entityModel.findOneAndUpdate({ _id }, entity);
 };
 
-export const remove = async (_id: string): Promise<LegalPerson> => {
-  return legalPersonModel.findOneAndDelete({ _id });
+export const remove = async (_id: string): Promise<Entity> => {
+  return entityModel.findOneAndDelete({ _id });
 };

@@ -1,13 +1,14 @@
 import { Schema, InferSchemaType, model } from 'mongoose';
+import { entitiesTypes } from './schema.utils';
 
 const documentType = new Schema(
   {
     name: String,
     description: String,
     mandatoryFields: Array,
-    entity: {
+    entityType: {
       type: String,
-      enum: ['NATURAL PERSON', 'LEGAL PERSON'],
+      enum: entitiesTypes,
     },
     robot: {
       type: Schema.Types.ObjectId,

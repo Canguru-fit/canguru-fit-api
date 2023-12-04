@@ -1,60 +1,36 @@
-import naturalPersonsModel from '@schemas/naturalPersons.model';
-import legalPersonsModel from '@schemas/legalPersons.model';
-import naturalPersonDocsModel, { NaturalPersonDoc } from '@schemas/naturalPersonDocs.model';
+import entitiesModel from '@schemas/entities.model';
+import documentsModel, { Document } from '@schemas/documents.model';
 import documentTypesModel from '@schemas/documentTypes.model';
-import legalPersonDocsModel, { LegalPersonDoc } from '@schemas/legalPersonDocs.model';
 import diligencesModel, { Diligence } from '@schemas/diligences.model';
 import { s3CopyObjectCommand, s3GetSignedUrl } from '@libs/s3Utils';
 import { refreshRobot, startRobot } from '../../apis/robots';
 
 export const read = async (): Promise<Diligence[]> => {
-  return diligencesModel
-    .find()
-    .populate({
-      path: 'naturalPersons',
-      model: naturalPersonsModel,
-      populate: {
-        path: 'documents',
-        model: naturalPersonDocsModel,
-        populate: { path: 'type', model: documentTypesModel },
-      },
-    })
-    .populate({
-      path: 'legalPersons',
-      model: legalPersonsModel,
-      populate: {
-        path: 'documents',
-        model: legalPersonDocsModel,
-        populate: { path: 'type', model: documentTypesModel },
-      },
-    });
+  return diligencesModel.find().populate({
+    path: 'entities',
+    model: entitiesModel,
+    populate: {
+      path: 'documents',
+      model: documentsModel,
+      populate: { path: 'type', model: documentTypesModel },
+    },
+  });
 };
 
 export const readOne = async (id: string): Promise<Diligence> => {
-  return diligencesModel
-    .findById(id)
-    .populate({
-      path: 'naturalPersons',
-      model: naturalPersonsModel,
-      populate: {
-        path: 'documents',
-        model: naturalPersonDocsModel,
-        populate: { path: 'type', model: documentTypesModel },
-      },
-    })
-    .populate({
-      path: 'legalPersons',
-      model: legalPersonsModel,
-      populate: {
-        path: 'documents',
-        model: legalPersonDocsModel,
-        populate: { path: 'type', model: documentTypesModel },
-      },
-    });
+  return diligencesModel.findById(id).populate({
+    path: 'entities',
+    model: entitiesModel,
+    populate: {
+      path: 'documents',
+      model: documentsModel,
+      populate: { path: 'type', model: documentTypesModel },
+    },
+  });
 };
 
 export const create = async (diligence: Diligence): Promise<Diligence> => {
-  return diligencesModel.create(diligence);
+  return diligencesModel.create({ ...diligence, stauts: 'NEW', entities: [] });
 };
 
 export const update = async (_id: string, diligence: Diligence): Promise<Diligence> => {
@@ -65,34 +41,20 @@ export const remove = async (_id: string): Promise<Diligence> => {
   return diligencesModel.findOneAndDelete({ _id });
 };
 
-export const collect = async (
-  document: (NaturalPersonDoc & { id: string }) | (LegalPersonDoc & { id: string }),
-  entity: string
-): Promise<NaturalPersonDoc | LegalPersonDoc> => {
+export const collect = async (document: Document & { id: string }): Promise<Document> => {
   let newDocument = null;
   let request = null;
 
-  if (entity === 'NATURAL PERSON') {
-    const naturalPerson = await naturalPersonsModel.findOne({ documents: document.id });
-    newDocument = await naturalPersonDocsModel.findById(document.id);
-    request = {
-      robot_type_id: '19',
-      property_id: newDocument.diligence,
-      entity_type_id: '1',
-      cpf_number: naturalPerson.cpf,
-      name: naturalPerson.name,
-    };
-  } else {
-    const legalPerson = await legalPersonsModel.findOne({ documents: document.id });
-    newDocument = await legalPersonDocsModel.findById(document.id);
-    request = {
-      robot_type_id: '19',
-      property_id: document.diligence,
-      entity_type_id: '2',
-      cnpj_number: legalPerson.cnpj,
-      name: legalPerson.name,
-    };
-  }
+  const foundEntity = await entitiesModel.findOne({ documents: document.id });
+  newDocument = await entitiesModel.findById(document.id);
+  request = {
+    robot_type_id: '19',
+    property_id: newDocument.diligence,
+    entity_type_id: foundEntity.type === 'NATURAL PERSON' ? '1' : '2',
+    cpf_number: foundEntity.cpf,
+    cnpj_number: foundEntity.cnpj,
+    name: foundEntity.name,
+  };
 
   const res = await startRobot(request);
   newDocument.protocol = res.protocol;
@@ -100,16 +62,9 @@ export const collect = async (
   return newDocument.save();
 };
 
-export const status = async (
-  document: (NaturalPersonDoc & { id: string }) | (LegalPersonDoc & { id: string }),
-  entity: string
-): Promise<NaturalPersonDoc | LegalPersonDoc> => {
-  let newDocument = null;
-  if (entity === 'NATURAL PERSON') {
-    newDocument = await naturalPersonDocsModel.findById(document.id);
-  } else {
-    newDocument = await legalPersonDocsModel.findById(document.id);
-  }
+export const status = async (document: Document & { id: string }): Promise<Document> => {
+  const newDocument = await documentsModel.findById(document.id);
+
   const [res] = await refreshRobot([newDocument.protocol]);
   newDocument.filePath = res.path
     ? await s3CopyObjectCommand(res.path, `documents/${newDocument.id}/${newDocument.name}`)
@@ -121,16 +76,8 @@ export const status = async (
   return newDocument.save();
 };
 
-export const document = async (
-  document: (NaturalPersonDoc & { id: string }) | (LegalPersonDoc & { id: string }),
-  entity: string
-): Promise<{ url: string }> => {
-  let foundDocument = null;
-  if (entity === 'NATURAL PERSON') {
-    foundDocument = await naturalPersonDocsModel.findById(document.id);
-  } else {
-    foundDocument = await legalPersonDocsModel.findById(document.id);
-  }
+export const document = async (document: Document & { id: string }): Promise<{ url: string }> => {
+  const foundDocument = await documentsModel.findById(document.id);
 
   const url = await s3GetSignedUrl(foundDocument.filePath);
   return { url };
