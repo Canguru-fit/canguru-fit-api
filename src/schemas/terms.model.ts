@@ -2,7 +2,12 @@ import { Schema, InferSchemaType, model } from 'mongoose';
 
 const documentTerm = new Schema(
   {
-    documentId: String,
+    documents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'documentType',
+      },
+    ],
     terms: Array,
   },
   {

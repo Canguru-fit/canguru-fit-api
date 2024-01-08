@@ -6,6 +6,12 @@ const company = new Schema(
     cnpj: String,
     email: String,
     phone: String,
+    users: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    ],
   },
   {
     collection: 'Companies',

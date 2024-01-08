@@ -1,12 +1,13 @@
+import companyModel from '../../schemas/company.model';
 import usersModel, { User } from '../../schemas/users.model';
 import { createUser, deleteUser, toggleUserStatus, resendTempPassword } from '../../libs/congitoUtils';
 
 export const read = async (): Promise<User[]> => {
-  return usersModel.find();
+  return usersModel.find().populate({ path: 'company', model: companyModel });
 };
 
 export const readOne = async (id: string): Promise<User> => {
-  return usersModel.findById(id);
+  return usersModel.findById(id).populate({ path: 'company', model: companyModel });
 };
 
 export const create = async (user: User): Promise<User> => {
@@ -18,7 +19,6 @@ export const create = async (user: User): Promise<User> => {
     await createUser(user.email);
     return usersModel.create({
       ...user,
-      termsAndConditions: true,
       status: true,
     });
   } catch (error) {

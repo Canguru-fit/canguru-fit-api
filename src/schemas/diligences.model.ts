@@ -2,12 +2,12 @@ import { Schema, InferSchemaType, model } from 'mongoose';
 
 const diligence = new Schema(
   {
-    stauts: {
+    status: {
       type: String,
       enum: ['NEW', 'IN PROGRESS', 'COMPLETED'],
     },
     name: String,
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'user',
     },

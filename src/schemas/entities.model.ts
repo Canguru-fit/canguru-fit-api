@@ -31,7 +31,7 @@ const entity = new Schema(
     ],
   },
   {
-    collection: 'Enties',
+    collection: 'Entities',
     timestamps: true,
   }
 );

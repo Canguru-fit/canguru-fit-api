@@ -4,13 +4,12 @@ const user = new Schema(
   {
     email: String,
     name: String,
-    companyId: {
+    company: {
       type: Schema.Types.ObjectId,
       ref: 'company',
     },
     status: Boolean,
     lastLogin: Date,
-    termsAndConditions: Boolean,
   },
   {
     collection: 'Users',

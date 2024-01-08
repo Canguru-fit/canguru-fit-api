@@ -6,17 +6,25 @@ import documentsModel from '../../schemas/documents.model';
 export const read = async (): Promise<Entity[]> => {
   return entityModel
     .find()
-    .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } });
+    .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } })
+    .populate({
+      path: 'diligence',
+      model: diligencesModel,
+    });
 };
 
 export const readOne = async (id: string): Promise<Entity> => {
   return entityModel
     .findById(id)
-    .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } });
+    .populate({ path: 'documents', model: documentsModel, populate: { path: 'type', model: documentTypesModel } })
+    .populate({
+      path: 'diligence',
+      model: diligencesModel,
+    });
 };
 
 export const create = async (entity: Entity): Promise<Entity> => {
-  const documentTypes = await documentTypesModel.find({ entity: 'LEGAL PERSON' });
+  const documentTypes = await documentTypesModel.find({ entity: entity.type });
 
   const documents = documentTypes.map((documentType) => {
     return {
