@@ -184,6 +184,109 @@ const serverlessConfiguration: AWS = {
           },
         },
       },
+      backoffice: {
+        Resources: {
+          CognitoUserPool: {
+            Type: 'AWS::Cognito::UserPool',
+            Properties: {
+              AccountRecoverySetting: {
+                RecoveryMechanisms: [
+                  {
+                    Name: 'verified_email',
+                    Priority: 1,
+                  },
+                ],
+              },
+              UserPoolName: process.env.NODE_ENV !== 'prod' ? `backoffice-${process.env.NODE_ENV}` : 'backoffice',
+              UsernameAttributes: ['email'],
+              AutoVerifiedAttributes: ['email'],
+              UsernameConfiguration: {
+                CaseSensitive: false,
+              },
+              VerificationMessageTemplate: {
+                DefaultEmailOption: 'CONFIRM_WITH_LINK',
+                EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail.{##Verify Email##} ',
+                EmailSubjectByLink: 'Quill - confirmação de e-mail',
+              },
+              Schema: [
+                {
+                  AttributeDataType: 'String',
+                  Mutable: true,
+                  Name: 'email',
+                  Required: true,
+                },
+              ],
+              Policies: {
+                PasswordPolicy: {
+                  MinimumLength: 6,
+                  RequireLowercase: false,
+                  RequireNumbers: false,
+                  RequireSymbols: false,
+                  RequireUppercase: false,
+                  TemporaryPasswordValidityDays: 7,
+                },
+              },
+            },
+          },
+          CognitoUserPoolClient: {
+            Type: 'AWS::Cognito::UserPoolClient',
+
+            Properties: {
+              AccessTokenValidity: 180,
+              IdTokenValidity: 180,
+              RefreshTokenValidity: 30,
+              AllowedOAuthFlows: ['implicit'],
+              AllowedOAuthFlowsUserPoolClient: true,
+              AllowedOAuthScopes: ['aws.cognito.signin.user.admin', 'email', 'openid', 'profile'],
+              CallbackURLs:
+                // analisar urls
+                process.env.NODE_ENV !== 'prod'
+                  ? [
+                      'http://localhost:3000/',
+                      'https://dev-backoffice.quill.com.br',
+                      'https://homolog-backoffice.quill.com.br',
+                    ]
+                  : ['https://backoffice.quill.com.br'],
+              LogoutURLs:
+                // analisar urls
+                process.env.NODE_ENV !== 'prod'
+                  ? [
+                      'http://localhost:3000/login',
+                      'https://dev-backoffice.quill.com.br/login',
+                      'https://homolog-backoffice.quill.com.br/login',
+                    ]
+                  : ['https://backoffice.quill.com.br/login'],
+              ClientName: process.env.NODE_ENV !== 'prod' ? `backoffice-${process.env.NODE_ENV}` : 'backoffice',
+              PreventUserExistenceErrors: 'LEGACY',
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+              ExplicitAuthFlows: [
+                'ALLOW_USER_PASSWORD_AUTH',
+                'ALLOW_REFRESH_TOKEN_AUTH',
+                'ALLOW_USER_SRP_AUTH',
+                'ALLOW_ADMIN_USER_PASSWORD_AUTH',
+              ],
+              GenerateSecret: false,
+              SupportedIdentityProviders: ['COGNITO'],
+              TokenValidityUnits: {
+                AccessToken: 'minutes',
+                IdToken: 'minutes',
+                RefreshToken: 'days',
+              },
+            },
+          },
+          CognitoUserPoolDomain: {
+            Type: 'AWS::Cognito::UserPoolDomain',
+            Properties: {
+              Domain: `backoffice-${process.env.NODE_ENV}`,
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+            },
+          },
+        },
+      },
     },
   },
 };
