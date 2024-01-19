@@ -6,6 +6,8 @@ const router = Router();
 router.use('/users', router);
 router.post('/login', usersController.login);
 router.post('/verify/token', usersController.verifyToken);
+router.post('/forgot', usersController.forgot);
+router.post('/update-password', usersController.updatePassword);
 router.get('/', usersController.read);
 router.get('/:id', usersController.readOne);
 router.post('', usersController.create);

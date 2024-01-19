@@ -7,6 +7,8 @@ import {
   resendTempPassword,
   initiateAuth,
   verifyToken as verifySession,
+  forgotPassword,
+  updatePassword as changePassword,
 } from '../../libs/congitoUtils';
 
 export const read = async (): Promise<User[]> => {
@@ -91,6 +93,28 @@ export const login = async ({ email, password }): Promise<User> => {
 export const verifyToken = async (req): Promise<User> => {
   try {
     return verifySession(req);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const forgot = async ({ email }): Promise<any> => {
+  const user = await usersModel.findOne({ email });
+
+  if (!user) throw new Error('User not found');
+
+  try {
+    return forgotPassword(email);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const updatePassword = async ({ code, username, newPassword }): Promise<any> => {
+  if (!code) throw new Error('Missing code');
+
+  try {
+    return changePassword(code, username, newPassword);
   } catch (error) {
     throw new Error(error.message);
   }

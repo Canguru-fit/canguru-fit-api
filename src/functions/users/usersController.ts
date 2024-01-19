@@ -53,3 +53,11 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
 export const verifyToken = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await usersService.verifyToken(req));
 };
+
+export const forgot = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.forgot(req.body));
+};
+
+export const updatePassword = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.updatePassword(req.body));
+};

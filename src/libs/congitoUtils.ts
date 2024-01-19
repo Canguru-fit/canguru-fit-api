@@ -9,6 +9,8 @@ import {
   InitiateAuthCommand,
   AuthFlowType,
   SignUpCommand,
+  ForgotPasswordCommand,
+  ConfirmForgotPasswordCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt from 'jsonwebtoken';
 import jwkToPem from 'jwk-to-pem';
@@ -192,5 +194,35 @@ export const verifyToken = async (req: Request) => {
     return auth;
   } catch (error) {
     return error;
+  }
+};
+
+export const forgotPassword = async (Username: string): Promise<unknown> => {
+  try {
+    const forgotPasswordCommandInput = {
+      ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+      Username,
+    };
+
+    const command = new ForgotPasswordCommand(forgotPasswordCommandInput);
+    return await client.send(command);
+  } catch (error) {
+    throw new Error(`Error creating user: ${error.message}`);
+  }
+};
+
+export const updatePassword = async (code: string, username: string, newPassword: string): Promise<unknown> => {
+  try {
+    const updatePasswordCommandInput = {
+      ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+      ConfirmationCode: code,
+      Password: newPassword,
+      Username: username,
+    };
+
+    const command = new ConfirmForgotPasswordCommand(updatePasswordCommandInput);
+    return await client.send(command);
+  } catch (error) {
+    throw new Error(`Error creating user: ${error.message}`);
   }
 };
