@@ -78,7 +78,7 @@ export const login = async ({ email, password }): Promise<User> => {
     const response = await initiateAuth({ username: email, password });
     return {
       ...response,
-      ...user,
+      ...user.toObject(),
     };
   } catch (error) {
     throw new Error(error.message);
