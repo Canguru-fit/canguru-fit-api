@@ -1,6 +1,13 @@
 import companyModel from '../../schemas/company.model';
 import usersModel, { User } from '../../schemas/users.model';
-import { createUser, deleteUser, toggleUserStatus, resendTempPassword } from '../../libs/congitoUtils';
+import {
+  createUser,
+  deleteUser,
+  toggleUserStatus,
+  resendTempPassword,
+  initiateAuth,
+  verifyToken as verifySession,
+} from '../../libs/congitoUtils';
 
 export const read = async (): Promise<User[]> => {
   return usersModel.find().populate({ path: 'company', model: companyModel });
@@ -57,6 +64,30 @@ export const remove = async (id: string): Promise<User> => {
   try {
     await deleteUser(user.email);
     return usersModel.findOneAndDelete({ id });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const login = async ({ email, password }): Promise<User> => {
+  const user = await usersModel.findOne({ email });
+
+  if (!user) throw new Error('User not found');
+
+  try {
+    const response = await initiateAuth({ username: email, password });
+    return {
+      ...response,
+      ...user,
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const verifyToken = async (req): Promise<User> => {
+  try {
+    return verifySession(req);
   } catch (error) {
     throw new Error(error.message);
   }

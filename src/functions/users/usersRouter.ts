@@ -3,6 +3,9 @@ import * as usersController from './usersController';
 
 const router = Router();
 
+router.post('/login', usersController.login);
+router.post('/verify/token', usersController.verifyToken);
+
 router.use('/users', router);
 router.get('/', usersController.read);
 router.get('/:id', usersController.readOne);

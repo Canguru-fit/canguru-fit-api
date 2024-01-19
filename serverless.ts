@@ -42,12 +42,13 @@ const serverlessConfiguration: AWS = {
       MONGODB_URL: process.env.MONGODB_URL,
       BUCKET_NAME: process.env.BUCKET_NAME,
       AWS_COGNITO_POOL_ID: process.env.AWS_COGNITO_POOL_ID,
+      AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
     },
     iamRoleStatements: [
       {
         Effect: 'Allow',
         Action: ['cognito-idp:*'],
-        Resource: `arn:aws:cognito-idp:us-east-1:513932968775:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
+        Resource: `arn:aws:cognito-idp:us-east-1:283911962114:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
       },
       {
         Effect: 'Allow',

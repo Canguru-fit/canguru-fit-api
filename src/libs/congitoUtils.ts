@@ -6,7 +6,12 @@ import {
   AdminGetUserCommand,
   AdminSetUserPasswordCommand,
   CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+  AuthFlowType,
 } from '@aws-sdk/client-cognito-identity-provider';
+import jwt from 'jsonwebtoken';
+import jwkToPem from 'jwk-to-pem';
+import axios from 'axios';
 
 const DEFAULT_USER_POOL_ID = process.env.AWS_COGNITO_POOL_ID;
 const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
@@ -116,5 +121,51 @@ export const resetPassword = async (
     return await client.send(command);
   } catch (error) {
     throw new Error(`Error while reseting user password: ${error}`);
+  }
+};
+
+export const initiateAuth = async ({ username, password }) => {
+  const command = new InitiateAuthCommand({
+    AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+    AuthParameters: {
+      USERNAME: username,
+      PASSWORD: password,
+    },
+    ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+  });
+
+  try {
+    const client = new CognitoIdentityProviderClient({
+      region: process.env.AWS_REGION,
+    });
+    client.config.credentials();
+    const response = await client.send(command);
+    return response.AuthenticationResult;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const verifyToken = async (req: Request) => {
+  try {
+    const data = await axios.get(
+      `https://cognito-idp.us-east-1.amazonaws.com/${process.env.AWS_COGNITO_POOL_ID}/.well-known/jwks.json`
+    );
+
+    const authorization = req.headers?.authorization as string;
+
+    if (!authorization) {
+      throw new Error('Missing token.');
+    }
+
+    const token = authorization.split(' ')[1];
+
+    const pem = jwkToPem(JSON.parse(data.data));
+
+    const auth = jwt.verify(token, pem, { algorithms: ['RS256'] });
+
+    return auth;
+  } catch (error) {
+    return error;
   }
 };

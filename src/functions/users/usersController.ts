@@ -45,3 +45,11 @@ export const toggleStatus = async (req: Request, res: Response): Promise<Respons
 export const remove = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await usersService.remove(req.params.id));
 };
+
+export const login = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.login(req.body));
+};
+
+export const verifyToken = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.verifyToken(req));
+};
