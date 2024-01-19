@@ -8,6 +8,7 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
   AuthFlowType,
+  SignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt from 'jsonwebtoken';
 import jwkToPem from 'jwk-to-pem';
@@ -38,6 +39,30 @@ export const createUser = async (Username: string, UserPoolId: string = DEFAULT_
     return await client.send(command);
   } catch (error) {
     throw new Error(`Error creating user: ${error.message}`);
+  }
+};
+
+export const signUpUser = async (Username: string, Password: string): Promise<void> => {
+  const SignUpCommandInput = {
+    ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+    Username,
+    Password,
+    UserAttributes: [
+      {
+        Name: 'email',
+        Value: Username,
+      },
+    ],
+  };
+
+  try {
+    const command = new SignUpCommand(SignUpCommandInput);
+    const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
+    client.config.credentials();
+    await client.send(command);
+  } catch (error) {
+    if (error.name === 'UsernameExistsException') throw Error('User already exists');
+    throw Error(error);
   }
 };
 

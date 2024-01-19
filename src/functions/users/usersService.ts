@@ -1,7 +1,7 @@
 import companyModel from '../../schemas/company.model';
 import usersModel, { User } from '../../schemas/users.model';
 import {
-  createUser,
+  signUpUser,
   deleteUser,
   toggleUserStatus,
   resendTempPassword,
@@ -17,13 +17,13 @@ export const readOne = async (id: string): Promise<User> => {
   return usersModel.findById(id).populate({ path: 'company', model: companyModel });
 };
 
-export const create = async (user: User): Promise<User> => {
+export const create = async (user: User & { password: string }): Promise<User> => {
   const foundUser = await usersModel.findOne({ email: user.email });
 
   if (foundUser) throw new Error('User already exists!');
 
   try {
-    await createUser(user.email);
+    await signUpUser(user.email, user.password);
     return usersModel.create({
       ...user,
       status: true,
