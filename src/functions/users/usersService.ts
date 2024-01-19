@@ -70,7 +70,10 @@ export const remove = async (id: string): Promise<User> => {
 };
 
 export const login = async ({ email, password }): Promise<User> => {
-  const user = await usersModel.findOne({ email });
+  const user = await usersModel.findOne({ email }).populate({
+    path: 'company',
+    model: companyModel,
+  });
 
   if (!user) throw new Error('User not found');
 
@@ -78,7 +81,7 @@ export const login = async ({ email, password }): Promise<User> => {
     const response = await initiateAuth({ username: email, password });
     return {
       ...response,
-      ...user.toObject(),
+      ...user.toObject({ getters: true }),
     };
   } catch (error) {
     throw new Error(error.message);
