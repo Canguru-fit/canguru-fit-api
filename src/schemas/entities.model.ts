@@ -17,7 +17,7 @@ const entity = new Schema(
     },
     gender: {
       type: String,
-      enum: ['MALE', 'FEMALE'],
+      enum: ['MALE', 'FEMALE', ''],
     },
     diligence: {
       type: Schema.Types.ObjectId,
