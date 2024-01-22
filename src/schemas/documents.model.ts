@@ -4,6 +4,7 @@ const document = new Schema(
   {
     name: String,
     filePath: String,
+    originalUrl: String,
     protocol: String,
     status: String,
     statusText: String,

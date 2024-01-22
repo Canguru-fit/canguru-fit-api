@@ -2,7 +2,7 @@ import entitiesModel from '@schemas/entities.model';
 import documentsModel, { Document } from '@schemas/documents.model';
 import documentTypesModel from '@schemas/documentTypes.model';
 import diligencesModel, { Diligence } from '@schemas/diligences.model';
-import { s3CopyObjectCommand, s3GetSignedUrl, uploadFileToS3 } from '@libs/s3Utils';
+import { s3CopyObjectCommand, s3GetSignedUrlPdf, uploadFileToS3 } from '@libs/s3Utils';
 import usersModel from '@schemas/users.model';
 import robotsModel from '@schemas/robots.model';
 import { refreshRobot, startExatoRobot, startRobot } from '../../apis/robots';
@@ -99,8 +99,8 @@ export const collectExato = async (document: Document & { id: string }): Promise
 
   try {
     const res = await startExatoRobot(request);
-    console.log(res);
     foundDocument.protocol = res.UniqueIdentifier;
+    foundDocument.originalUrl = res.PdfUrl;
     foundDocument.filePath = res.PdfUrl
       ? await uploadFileToS3(res.PdfUrl, `documents/${foundDocument._id}/${foundDocument.name}`)
       : res.PdfUrl;
@@ -133,6 +133,6 @@ export const status = async (document: Document & { id: string }): Promise<Docum
 export const document = async (document: Document & { id: string }): Promise<{ url: string }> => {
   const foundDocument = await documentsModel.findById(document.id);
 
-  const url = await s3GetSignedUrl(foundDocument.filePath);
+  const url = await s3GetSignedUrlPdf(foundDocument.filePath);
   return { url };
 };

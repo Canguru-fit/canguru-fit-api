@@ -63,3 +63,14 @@ export const s3GetSignedUrl = async (Key: string, Bucket: string = s3Bucket) => 
   const command = new GetObjectCommand(getObjectParams);
   return getSignedUrl(client, command, { expiresIn: 3600 });
 };
+
+export const s3GetSignedUrlPdf = async (Key: string, Bucket: string = s3Bucket) => {
+  const ResponseContentType = 'application/pdf';
+  const getObjectParams = {
+    Bucket,
+    Key,
+    ResponseContentType,
+  };
+  const command = new GetObjectCommand(getObjectParams);
+  return getSignedUrl(client, command, { expiresIn: 3600 });
+};
