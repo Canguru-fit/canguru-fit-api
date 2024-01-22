@@ -42,6 +42,10 @@ export const collect = async (req: Request, res: Response): Promise<Response> =>
   return res.send(await diligencesService.collect(req.body));
 };
 
+export const collectExato = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.collectExato(req.body));
+};
+
 export const status = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await diligencesService.status(req.body));
 };

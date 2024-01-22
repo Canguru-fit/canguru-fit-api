@@ -5,7 +5,6 @@ const documentType = new Schema(
   {
     name: String,
     description: String,
-    mandatoryFields: Array,
     entityType: {
       type: String,
       enum: entitiesTypes,

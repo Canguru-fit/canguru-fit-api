@@ -2,9 +2,23 @@ import entitiesModel from '@schemas/entities.model';
 import documentsModel, { Document } from '@schemas/documents.model';
 import documentTypesModel from '@schemas/documentTypes.model';
 import diligencesModel, { Diligence } from '@schemas/diligences.model';
-import { s3CopyObjectCommand, s3GetSignedUrl } from '@libs/s3Utils';
+import { s3CopyObjectCommand, s3GetSignedUrl, uploadFileToS3 } from '@libs/s3Utils';
 import usersModel from '@schemas/users.model';
-import { refreshRobot, startRobot } from '../../apis/robots';
+import robotsModel from '@schemas/robots.model';
+import { refreshRobot, startExatoRobot, startRobot } from '../../apis/robots';
+import { readOne as readSingleDoc } from '../documents/documentsService';
+
+const buildParams = (entity, fields) => {
+  const params = {};
+  fields.forEach((field) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (entity.hasOwnProperty(field)) {
+      params[field] = entity[field];
+    }
+  });
+
+  return params;
+};
 
 export const read = async (): Promise<Diligence[]> => {
   return diligencesModel
@@ -33,7 +47,7 @@ export const readOne = async (id: string): Promise<Diligence> => {
       populate: {
         path: 'documents',
         model: documentsModel,
-        populate: { path: 'type', model: documentTypesModel },
+        populate: { path: 'type', model: documentTypesModel, populate: { path: 'robot', model: robotsModel } },
       },
     })
     .populate({
@@ -73,6 +87,33 @@ export const collect = async (document: Document & { id: string }): Promise<Docu
   newDocument.protocol = res.protocol;
 
   return newDocument.save();
+};
+
+export const collectExato = async (document: Document & { id: string }): Promise<Document> => {
+  const foundEntity = await entitiesModel.findOne({ documents: document.id });
+  const foundDocument = await readSingleDoc(document.id);
+  const request = {
+    url: foundDocument?.type?.robot?.url,
+    params: buildParams(foundEntity.toObject(), foundDocument?.type?.robot?.mandatoryFields),
+  };
+
+  try {
+    const res = await startExatoRobot(request);
+    console.log(res);
+    foundDocument.protocol = res.UniqueIdentifier;
+    foundDocument.filePath = res.PdfUrl
+      ? await uploadFileToS3(res.PdfUrl, `documents/${foundDocument._id}/${foundDocument.name}`)
+      : res.PdfUrl;
+    foundDocument.status = 'COLLECTED';
+    foundDocument.statusText = res?.Message;
+    foundDocument.analysisStatus = res?.Result?.Consta ? 'Sim' : '';
+  } catch (error) {
+    console.log(error);
+    foundDocument.status = 'FAILED';
+    foundDocument.statusText = 'Falha ao realizar coleta';
+  }
+
+  return foundDocument.save();
 };
 
 export const status = async (document: Document & { id: string }): Promise<Document> => {

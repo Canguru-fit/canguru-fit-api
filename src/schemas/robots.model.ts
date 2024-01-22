@@ -5,6 +5,8 @@ const robot = new Schema(
     name: String,
     url: String,
     isAvailable: Boolean,
+    mandatoryFields: Array,
+    source: String,
   },
   {
     collection: 'Robots',

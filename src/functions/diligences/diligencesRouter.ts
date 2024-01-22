@@ -14,6 +14,7 @@ router.put('/entities/:id', entitiesController.update);
 router.delete('/entities/:id', entitiesController.remove);
 
 router.post('/documents/collect', diligencesController.collect);
+router.post('/documents/collect/exato', diligencesController.collectExato);
 router.post('/documents/status', diligencesController.status);
 router.post('/documents', diligencesController.document);
 
