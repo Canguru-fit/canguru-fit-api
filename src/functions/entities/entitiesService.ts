@@ -24,7 +24,7 @@ export const readOne = async (id: string): Promise<Entity> => {
 };
 
 export const create = async (entity: Entity): Promise<Entity> => {
-  const documentTypes = await documentTypesModel.find({ entity: entity.type });
+  const documentTypes = await documentTypesModel.find({ entityType: entity.type });
 
   const documents = documentTypes.map((documentType) => {
     return {
