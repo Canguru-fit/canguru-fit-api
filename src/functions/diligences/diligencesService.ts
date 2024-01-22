@@ -106,7 +106,8 @@ export const collectExato = async (document: Document & { id: string }): Promise
       : res.PdfUrl;
     foundDocument.status = 'COLLECTED';
     foundDocument.statusText = res?.Message;
-    foundDocument.analysisStatus = res?.Result?.Consta ? 'Sim' : '';
+    // eslint-disable-next-line no-nested-ternary
+    foundDocument.analysisStatus = res?.Message === 'Sucesso' ? (res?.Result?.Consta ? 'Sim' : 'Não') : '';
   } catch (error) {
     console.log(error);
     foundDocument.status = 'FAILED';
