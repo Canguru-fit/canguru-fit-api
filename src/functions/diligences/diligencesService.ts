@@ -20,7 +20,7 @@ const buildParams = (entity, fields) => {
     // eslint-disable-next-line no-prototype-builtins
     if (entity.hasOwnProperty(field)) {
       let val = entity[field];
-      if (params[field] === 'cpf' || params[field] === 'cnpj') {
+      if (field === 'cpf' || field === 'cnpj') {
         val = val.replace(/[^\w\s]/gi, '');
       }
 
