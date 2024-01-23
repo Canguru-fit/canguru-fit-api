@@ -11,6 +11,7 @@ const diligence = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'user',
     },
+    type: String,
     entities: [
       {
         type: Schema.Types.ObjectId,

@@ -10,10 +10,21 @@ import { readOne as readSingleDoc } from '../documents/documentsService';
 
 const buildParams = (entity, fields) => {
   const params = {};
+
+  if (fields.includes('uf')) {
+    // eslint-disable-next-line no-param-reassign
+    entity.uf = 'SP';
+  }
+
   fields.forEach((field) => {
     // eslint-disable-next-line no-prototype-builtins
     if (entity.hasOwnProperty(field)) {
-      params[field] = entity[field];
+      let val = entity[field];
+      if (params[field] === 'cpf' || params[field] === 'cnpj') {
+        val = val.replace(/[^\w\s]/gi, '');
+      }
+
+      params[field] = val;
     }
   });
 
