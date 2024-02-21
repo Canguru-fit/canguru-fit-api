@@ -7,6 +7,8 @@ const router = Router();
 
 router.use('/diligences', router);
 
+router.get('/statistics', diligencesController.getStatistics);
+
 router.post('/entities', entitiesController.create);
 router.get('/entities/:id', entitiesController.readOne);
 router.get('/entities/', entitiesController.read);

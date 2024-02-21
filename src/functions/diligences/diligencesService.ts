@@ -148,3 +148,14 @@ export const document = async (document: Document & { id: string }): Promise<{ u
   const url = await s3GetSignedUrlPdf(foundDocument.filePath);
   return { url };
 };
+
+export const getStatistics = async (): Promise<{ status: string; sum: number }[]> => {
+  return diligencesModel.aggregate([
+    {
+      $group: {
+        _id: '$status',
+        count: { $sum: 1 }, // this means that the count will increment by 1
+      },
+    },
+  ]);
+};
