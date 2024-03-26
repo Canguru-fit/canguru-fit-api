@@ -67,8 +67,8 @@ export const readOne = async (id: string): Promise<Diligence> => {
     });
 };
 
-export const create = async (diligence: Diligence): Promise<Diligence> => {
-  return diligencesModel.create({ ...diligence, status: 'NEW', entities: [] });
+export const create = async (diligence: Diligence, user: string): Promise<Diligence> => {
+  return diligencesModel.create({ ...diligence, user, status: 'NEW', entities: [] });
 };
 
 export const update = async (_id: string, diligence: Diligence): Promise<Diligence> => {

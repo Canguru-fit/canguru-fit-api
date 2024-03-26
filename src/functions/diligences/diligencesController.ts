@@ -19,13 +19,13 @@ import * as diligencesService from './diligencesService';
  *              description: Token exchanged
  */
 export const create = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.create(req.body));
+  const { user } = req.headers;
+  return res.send(await diligencesService.create(req.body, user));
 };
 
 export const read = async (req: Request, res: Response): Promise<Response> => {
-  // const { _Authorization, Userid } = req.headers;
-  const { Userid } = req.headers;
-  return res.send(await diligencesService.read(Userid));
+  const { user } = req.headers;
+  return res.send(await diligencesService.read(user));
 };
 
 export const readOne = async (req: Request, res: Response): Promise<Response> => {
