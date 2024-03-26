@@ -22,8 +22,10 @@ export const create = async (req: Request, res: Response): Promise<Response> => 
   return res.send(await diligencesService.create(req.body));
 };
 
-export const read = async (_req: Request, res: Response): Promise<Response> => {
-  return res.send(await diligencesService.read());
+export const read = async (req: Request, res: Response): Promise<Response> => {
+  // const { _Authorization, Userid } = req.headers;
+  const { Userid } = req.headers;
+  return res.send(await diligencesService.read(Userid));
 };
 
 export const readOne = async (req: Request, res: Response): Promise<Response> => {
@@ -46,8 +48,16 @@ export const collectExato = async (req: Request, res: Response): Promise<Respons
   return res.send(await diligencesService.collectExato(req.body));
 };
 
+export const collectPlexi = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.collectPlexi(req.body));
+};
+
 export const status = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await diligencesService.status(req.body));
+};
+
+export const statusPlexi = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.statusPlexi(req.body));
 };
 
 export const document = async (req: Request, res: Response): Promise<Response> => {

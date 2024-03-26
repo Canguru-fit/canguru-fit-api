@@ -5,6 +5,14 @@ const robotsAPi = axios.create({
   headers: { 'x-api-key': 'uBnA3AGzYgF1m6Hzras86SNpTSDOQak2dNw9soE7' },
 });
 
+const plexiApi = axios.create({
+  baseURL: 'https://sandbox.plexi.com.br/api/maestro',
+  headers: {
+    Authorization:
+      'Bearer KwxLEa0gpJDqU3C0UCxdlObUcyC5TxPfv8iEQuilciRsa0Mz8C6e7OM921eFYvZigxHzBwjavlg9WF81Xysu6jgTKK8iB9qUxqLs',
+  },
+});
+
 const EXATO_TOKEN = '8fb5e716c0cc4cecb7333fa05366c456';
 
 export const startRobot = async (data: any): Promise<any> => {
@@ -29,6 +37,24 @@ export const startExatoRobot = async ({ url, params }): Promise<any> => {
 
   try {
     return await axios.get(`${url}`, { params: { token: EXATO_TOKEN, ...params } }).then((res) => res.data);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const startPlexiRobot = async ({ url, params }): Promise<any> => {
+  console.log('Url', url);
+
+  try {
+    return await plexiApi.post(`${url}`, { ...params }).then((res) => res.data);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const refreshPlexiRobot = async (protocol: string[]): Promise<any> => {
+  try {
+    return await plexiApi.get(`/result/${protocol}`).then((res) => res.data);
   } catch (error) {
     throw new Error(error.message);
   }

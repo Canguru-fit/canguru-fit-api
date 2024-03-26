@@ -10,6 +10,7 @@ const document = new Schema(
     statusText: String,
     analysisStatus: String,
     analysisDescription: String,
+    terms: Array,
     diligence: {
       type: Schema.Types.ObjectId,
       ref: 'diligence',

@@ -17,7 +17,9 @@ router.delete('/entities/:id', entitiesController.remove);
 
 router.post('/documents/collect', diligencesController.collect);
 router.post('/documents/collect/exato', diligencesController.collectExato);
+router.post('/documents/collect/plexi', diligencesController.collectPlexi);
 router.post('/documents/status', diligencesController.status);
+router.post('/documents/status/plexi', diligencesController.statusPlexi);
 router.post('/documents', diligencesController.document);
 
 router.get('/:id', diligencesController.readOne);

@@ -5,7 +5,7 @@ import diligencesModel, { Diligence } from '@schemas/diligences.model';
 import { s3CopyObjectCommand, s3GetSignedUrlPdf, uploadFileToS3 } from '@libs/s3Utils';
 import usersModel from '@schemas/users.model';
 import robotsModel from '@schemas/robots.model';
-import { refreshRobot, startExatoRobot, startRobot } from '../../apis/robots';
+import { refreshPlexiRobot, refreshRobot, startExatoRobot, startRobot } from '../../apis/robots';
 import { readOne as readSingleDoc } from '../documents/documentsService';
 
 const buildParams = (entity, fields) => {
@@ -31,9 +31,9 @@ const buildParams = (entity, fields) => {
   return params;
 };
 
-export const read = async (): Promise<Diligence[]> => {
+export const read = async (id: string): Promise<Diligence[]> => {
   return diligencesModel
-    .find()
+    .find({ user: id })
     .populate({
       path: 'entities',
       model: entitiesModel,
@@ -100,6 +100,27 @@ export const collect = async (document: Document & { id: string }): Promise<Docu
   return newDocument.save();
 };
 
+export const collectPlexi = async (document: Document & { id: string }): Promise<Document> => {
+  let newDocument = null;
+  let request = null;
+
+  const foundEntity = await entitiesModel.findOne({ documents: document.id });
+  newDocument = await entitiesModel.findById(document.id);
+  request = {
+    robot_type_id: '19',
+    property_id: newDocument.diligence,
+    entity_type_id: foundEntity.type === 'NATURAL PERSON' ? '1' : '2',
+    cpf_number: foundEntity.cpf,
+    cnpj_number: foundEntity.cnpj,
+    name: foundEntity.name,
+  };
+
+  const res = await startRobot(request);
+  newDocument.protocol = res.protocol;
+
+  return newDocument.save();
+};
+
 export const collectExato = async (document: Document & { id: string }): Promise<Document> => {
   const foundEntity = await entitiesModel.findOne({ documents: document.id });
   const foundDocument = await readSingleDoc(document.id);
@@ -138,6 +159,19 @@ export const status = async (document: Document & { id: string }): Promise<Docum
   newDocument.analysisStatus = res.evaluation;
   newDocument.status = res.status_id;
   newDocument.statusText = res.status;
+
+  return newDocument.save();
+};
+
+export const statusPlexi = async (document: Document & { id: string }): Promise<Document> => {
+  const newDocument = await documentsModel.findById(document.id);
+
+  const res = await refreshPlexiRobot([newDocument.protocol]);
+  if (res) {
+    newDocument.filePath = res.pdf;
+    newDocument.status = 'COLLECTED';
+    newDocument.statusText = res.status;
+  }
 
   return newDocument.save();
 };
