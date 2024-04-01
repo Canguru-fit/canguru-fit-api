@@ -6,7 +6,7 @@ const documentType = new Schema(
     name: String,
     description: String,
     entityType: {
-      type: String,
+      type: [String],
       enum: entitiesTypes,
     },
     robot: {

@@ -1,0 +1,191 @@
+[
+    {
+        "name": "TST - Certidão de Débito Trabalhista",
+        "url": "/api/maestro/tst/certidao-debito-trabalhista",
+        "scope": "federal",
+        "authority": "TST",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT2 - Certidão de Ação Trabalhista (PJe)",
+        "url": " /api/maestro/trt2/certidao-acao-trabalhista-pje",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "Receita Federal - Certidão de Débitos Relativos a Créditos Tributários Federais e à Dívida Ativa da União",
+        "url": "/api/maestro/receita/certidao-negativa",
+        "scope": "federal",
+        "authority": "Receita Federal",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "Receita Federal - Cartão CNPJ",
+        "url": "/api/maestro/receita/cartao-cnpj",
+        "scope": "federal",
+        "authority": "Receita Federal",
+        "isAvailable": true,
+        "mandatoryFields": ["cnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "Receita Federal - Quadro de Sócios e Administradores",
+        "url": "/api/maestro/receita/qsa",
+        "scope": "federal",
+        "authority": "Receita Federal",
+        "isAvailable": true,
+        "mandatoryFields": ["cnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "FGTS - Certificado de Regularidade",
+        "url": "/api/maestro/fgts/certificado-regularidade",
+        "scope": "federal",
+        "authority": "Receita Federal",
+        "isAvailable": true,
+        "mandatoryFields": ["cnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT1 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt1/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT2 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt2/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj", "nome"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT3 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt3/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT4 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt4/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT6 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt6/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT7 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt7/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT9 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt9/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT10 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt10/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TRT15 - Certidão de Ação Trabalhista",
+        "url": "/api/maestro/trt15/certidao-acao-trabalhista",
+        "scope": "state",
+        "authority": "Tribunal Regional do Trabalho",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj", "arquivado"],
+        "source": "plexi"
+    },
+    {
+        "name": "Fazenda SP - Certidão Negativa de Débitos Tributários Não Inscritos",
+        "url": "/api/maestro/fazenda-sp/certidao-debitos-tributarios",
+        "scope": "state",
+        "authority": "Secretaria da Fazenda",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "PGE SP - Certidão Negativa de Débitos Tributários da Dívida Ativa",
+        "url": "/api/maestro/pge-sp/certidao-negativa-debitos-tributarios-divida-ativa",
+        "scope": "state",
+        "authority": "Procuradoria Geral do Estado",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "CENPROT SP - Central de Protesto do Estado de São Paulo",
+        "url": "/api/maestro/cenprot-sp/consulta-protesto",
+        "scope": "municipal",
+        "authority": "CENPROT",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "CNJ - Cadastro Nacional de Condenações Cíveis por Ato de Improbidade Administrativa e Inelegibilidade",
+        "url": "/api/maestro/cnj/improbidade-administrativa-inelegibilidade",
+        "scope": "federal",
+        "authority": "Conselho Nacional de Justiça",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "IBAMA - Certidão Negativa de Débito",
+        "url": "/api/maestro/ibama/certidao-negativa-debito",
+        "scope": "federal",
+        "authority": "IBAMA",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    },
+    {
+        "name": "TCU - Relação de Inidôneos",
+        "url": "/api/maestro/tcu/relacao-inidoneos",
+        "scope": "federal",
+        "authority": "Tribunal de Contas da União",
+        "isAvailable": true,
+        "mandatoryFields": ["cpfCnpj"],
+        "source": "plexi"
+    }
+]

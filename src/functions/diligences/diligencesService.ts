@@ -5,7 +5,7 @@ import diligencesModel, { Diligence } from '@schemas/diligences.model';
 import { s3CopyObjectCommand, s3GetSignedUrlPdf, uploadFileToS3 } from '@libs/s3Utils';
 import usersModel from '@schemas/users.model';
 import robotsModel from '@schemas/robots.model';
-import { refreshPlexiRobot, refreshRobot, startExatoRobot, startRobot } from '../../apis/robots';
+import { refreshPlexiRobot, refreshRobot, startExatoRobot, startRobot, startPlexiRobot } from '../../apis/robots';
 import { readOne as readSingleDoc } from '../documents/documentsService';
 
 const buildParams = (entity, fields) => {
@@ -27,6 +27,23 @@ const buildParams = (entity, fields) => {
       params[field] = val;
     }
   });
+
+  return params;
+};
+
+const buildPlexiParams = (entity, _fields) => {
+  const params = {};
+
+  switch (entity.type) {
+    case 'NATURAL PERSON':
+      params.cpfCnpj = entity.cpf;
+      break;
+    case 'LEGAL PERSON':
+      params.cpfCnpj = entity.cnpj;
+      break;
+    default:
+      break;
+  }
 
   return params;
 };
@@ -101,24 +118,23 @@ export const collect = async (document: Document & { id: string }): Promise<Docu
 };
 
 export const collectPlexi = async (document: Document & { id: string }): Promise<Document> => {
-  let newDocument = null;
-  let request = null;
-
   const foundEntity = await entitiesModel.findOne({ documents: document.id });
-  newDocument = await entitiesModel.findById(document.id);
-  request = {
-    robot_type_id: '19',
-    property_id: newDocument.diligence,
-    entity_type_id: foundEntity.type === 'NATURAL PERSON' ? '1' : '2',
-    cpf_number: foundEntity.cpf,
-    cnpj_number: foundEntity.cnpj,
-    name: foundEntity.name,
+  const foundDocument = await readSingleDoc(document.id);
+  const request = {
+    url: foundDocument?.type?.robot?.url,
+    params: buildPlexiParams(foundEntity.toObject(), foundDocument?.type?.robot?.mandatoryFields),
   };
 
-  const res = await startRobot(request);
-  newDocument.protocol = res.protocol;
+  try {
+    const res = await startPlexiRobot(request);
+    foundDocument.protocol = res.requestId;
+  } catch (error) {
+    console.log(error);
+    foundDocument.status = 'FAILED';
+    foundDocument.statusText = 'Falha ao iniciar coleta';
+  }
 
-  return newDocument.save();
+  return foundDocument.save();
 };
 
 export const collectExato = async (document: Document & { id: string }): Promise<Document> => {

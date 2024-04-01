@@ -4,6 +4,8 @@ const robot = new Schema(
   {
     name: String,
     url: String,
+    scope: String,
+    authority: String,
     isAvailable: Boolean,
     mandatoryFields: Array,
     source: String,

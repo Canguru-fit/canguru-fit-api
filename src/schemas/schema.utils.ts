@@ -1,1 +1,1 @@
-export const entitiesTypes = ['NATURAL PERSON', 'LEGAL PERSON'];
+export const entitiesTypes = ['NATURAL PERSON', 'LEGAL PERSON', 'REGISTRATION'];
