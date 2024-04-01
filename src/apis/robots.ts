@@ -6,7 +6,8 @@ const robotsAPi = axios.create({
 });
 
 const plexiApi = axios.create({
-  baseURL: 'https://sandbox.plexi.com.br',
+  // baseURL: 'https://sandbox.plexi.com.br',
+  baseURL: 'https://api.plexi.com.br',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
