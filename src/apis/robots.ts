@@ -50,6 +50,8 @@ export const startPlexiRobot = async ({ url, params }): Promise<any> => {
   try {
     return await plexiApi.post(`${url}`, { ...params }).then((res) => res.data);
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error.message);
     throw new Error(error.message);
   }
 };
@@ -58,6 +60,8 @@ export const refreshPlexiRobot = async (protocol: string): Promise<any> => {
   try {
     return await plexiApi.get(`/api/maestro/result/${protocol}`).then((res) => res.data);
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error.message);
     throw new Error(error.message);
   }
 };
