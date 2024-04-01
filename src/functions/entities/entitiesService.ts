@@ -30,9 +30,11 @@ export const create = async (entity: Entity): Promise<Entity> => {
     return {
       name: documentType.name,
       filePath: '',
+      originalUrl: '',
       protocol: '',
       status: '',
       statusText: '',
+      terms: [],
       analysisStatus: '',
       analysisDescription: '',
       diligence: entity.diligence,

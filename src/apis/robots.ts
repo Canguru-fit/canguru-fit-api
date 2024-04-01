@@ -6,8 +6,10 @@ const robotsAPi = axios.create({
 });
 
 const plexiApi = axios.create({
-  baseURL: 'https://sandbox.plexi.com.br/api/maestro',
+  baseURL: 'https://sandbox.plexi.com.br',
   headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
     Authorization:
       'Bearer KwxLEa0gpJDqU3C0UCxdlObUcyC5TxPfv8iEQuilciRsa0Mz8C6e7OM921eFYvZigxHzBwjavlg9WF81Xysu6jgTKK8iB9qUxqLs',
   },
@@ -52,9 +54,9 @@ export const startPlexiRobot = async ({ url, params }): Promise<any> => {
   }
 };
 
-export const refreshPlexiRobot = async (protocol: string[]): Promise<any> => {
+export const refreshPlexiRobot = async (protocol: string): Promise<any> => {
   try {
-    return await plexiApi.get(`/result/${protocol}`).then((res) => res.data);
+    return await plexiApi.get(`/api/maestro/result/${protocol}`).then((res) => res.data);
   } catch (error) {
     throw new Error(error.message);
   }

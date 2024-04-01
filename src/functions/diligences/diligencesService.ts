@@ -31,6 +31,14 @@ const buildParams = (entity, fields) => {
   return params;
 };
 
+const kebabCase = (value: string): string => {
+  return value
+    .toLocaleLowerCase()
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase();
+};
+
 const buildPlexiParams = (entity, _fields) => {
   const params = {};
 
@@ -128,6 +136,8 @@ export const collectPlexi = async (document: Document & { id: string }): Promise
   try {
     const res = await startPlexiRobot(request);
     foundDocument.protocol = res.requestId;
+    foundDocument.status = 'PENDING';
+    foundDocument.statusText = 'Coleta em andamento';
   } catch (error) {
     console.log(error);
     foundDocument.status = 'FAILED';
@@ -150,7 +160,12 @@ export const collectExato = async (document: Document & { id: string }): Promise
     foundDocument.protocol = res.UniqueIdentifier;
     foundDocument.originalUrl = res.PdfUrl;
     foundDocument.filePath = res.PdfUrl
-      ? await uploadFileToS3(res.PdfUrl, `documents/${foundDocument._id}/${foundDocument.name}`)
+      ? await uploadFileToS3(
+          res.PdfUrl,
+          `documents/${foundDocument.diligence}/${kebabCase(foundEntity.type)}/${foundDocument._id}/${kebabCase(
+            foundDocument.name
+          )}`
+        )
       : res.PdfUrl;
     foundDocument.status = 'COLLECTED';
     foundDocument.statusText = res?.Message;
@@ -182,9 +197,9 @@ export const status = async (document: Document & { id: string }): Promise<Docum
 export const statusPlexi = async (document: Document & { id: string }): Promise<Document> => {
   const newDocument = await documentsModel.findById(document.id);
 
-  const res = await refreshPlexiRobot([newDocument.protocol]);
+  const res = await refreshPlexiRobot(newDocument.protocol);
   if (res) {
-    newDocument.filePath = res.pdf;
+    newDocument.originalUrl = res.pdf;
     newDocument.status = 'COLLECTED';
     newDocument.statusText = res.status;
   }
