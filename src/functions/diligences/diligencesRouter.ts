@@ -21,6 +21,7 @@ router.post('/documents/collect/plexi', diligencesController.collectPlexi);
 router.post('/documents/status', diligencesController.status);
 router.post('/documents/status/plexi', diligencesController.statusPlexi);
 router.post('/documents', diligencesController.document);
+router.post('/upload', diligencesController.upload);
 
 router.get('/:id', diligencesController.readOne);
 router.get('/', diligencesController.read);

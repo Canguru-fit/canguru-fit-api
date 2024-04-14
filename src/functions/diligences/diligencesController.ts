@@ -64,6 +64,10 @@ export const document = async (req: Request, res: Response): Promise<Response> =
   return res.send(await diligencesService.document(req.body));
 };
 
+export const upload = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await diligencesService.upload(req.body));
+};
+
 export const getStatistics = async (_req: Request, res: Response): Promise<Response> => {
   return res.send(await diligencesService.getStatistics());
 };

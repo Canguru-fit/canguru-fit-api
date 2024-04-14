@@ -58,6 +58,7 @@ const serverlessConfiguration: AWS = {
           `arn:aws:s3:::homolog-eclosing-diligences/*`,
           `arn:aws:s3:::dev-eclosing-diligences/*`,
           `arn:aws:s3:::dev-quill-diligence-app-bucket/*`,
+          `arn:aws:s3:::eclosing-dumps/*`,
         ],
       },
     ],

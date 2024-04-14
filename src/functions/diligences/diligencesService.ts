@@ -219,6 +219,26 @@ export const statusPlexi = async (document: Document & { id: string }): Promise<
   return newDocument.save();
 };
 
+export const upload = async (document: Document & { id: string; url: string }): Promise<Document> => {
+  const foundEntity = await entitiesModel.findOne({ documents: document.id });
+  const newDocument = await documentsModel.findById(document.id);
+
+  try {
+    const path = `documents/${newDocument.diligence}/${kebabCase(foundEntity.type)}/${newDocument._id}/${kebabCase(
+      newDocument.name
+    )}`;
+
+    newDocument.filePath = await s3CopyObjectCommand(document.url, path);
+    newDocument.originalUrl = document.url;
+    newDocument.status = 'COLLECTED';
+    newDocument.statusText = 'Sucesso';
+  } catch (error) {
+    throw new Error(`Error while converting the file: ${error.message}`);
+  }
+
+  return newDocument.save();
+};
+
 export const document = async (document: Document & { id: string }): Promise<{ url: string }> => {
   const foundDocument = await documentsModel.findById(document.id);
 
