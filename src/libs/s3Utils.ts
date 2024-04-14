@@ -1,7 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { S3Client, CopyObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Upload } from '@aws-sdk/lib-storage';
 import axios from 'axios';
+import fs from 'node:fs';
 
 const client = new S3Client({ region: process.env.AWS_REGION });
 
@@ -25,6 +27,30 @@ export const s3CopyObjectCommand = async (CopySource: string, Name: string, Buck
     return Key;
   } catch (err) {
     throw new Error(err.message);
+  }
+};
+
+export const s3StreamObjectCommand = async (data: string, Key: string, Bucket: string = s3Bucket) => {
+  try {
+    const documentName = Key.split('/').pop() || 'unknown';
+
+    if (!fs.existsSync('/tmp')) {
+      fs.mkdirSync('/tmp');
+    }
+
+    fs.writeFileSync(`/tmp/${documentName}`, data, 'base64');
+
+    const Body = fs.createReadStream(`/tmp/${documentName}`);
+
+    const parallelUploads3 = new Upload({
+      client,
+      params: { Bucket, Key, Body, ContentType: 'application/pdf' },
+    });
+
+    await parallelUploads3.done();
+    return Key;
+  } catch (e) {
+    throw new Error(e.message);
   }
 };
 

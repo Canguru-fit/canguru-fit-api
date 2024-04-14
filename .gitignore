@@ -17,3 +17,7 @@ jspm_packages
 
 # Ignore DS_Store files
 .DS_Store
+
+# Temp files
+
+tmp/*

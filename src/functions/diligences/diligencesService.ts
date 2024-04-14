@@ -2,7 +2,7 @@ import entitiesModel from '@schemas/entities.model';
 import documentsModel, { Document } from '@schemas/documents.model';
 import documentTypesModel from '@schemas/documentTypes.model';
 import diligencesModel, { Diligence } from '@schemas/diligences.model';
-import { s3CopyObjectCommand, s3GetSignedUrlPdf, uploadFileToS3 } from '@libs/s3Utils';
+import { s3CopyObjectCommand, s3GetSignedUrlPdf, s3StreamObjectCommand, uploadFileToS3 } from '@libs/s3Utils';
 import usersModel from '@schemas/users.model';
 import robotsModel from '@schemas/robots.model';
 import { refreshPlexiRobot, refreshRobot, startExatoRobot, startRobot, startPlexiRobot } from '../../apis/robots';
@@ -195,10 +195,22 @@ export const status = async (document: Document & { id: string }): Promise<Docum
 };
 
 export const statusPlexi = async (document: Document & { id: string }): Promise<Document> => {
+  const foundEntity = await entitiesModel.findOne({ documents: document.id });
   const newDocument = await documentsModel.findById(document.id);
 
   const res = await refreshPlexiRobot(newDocument.protocol);
+
   if (res) {
+    try {
+      const path = `documents/${newDocument.diligence}/${kebabCase(foundEntity.type)}/${newDocument._id}/${kebabCase(
+        newDocument.name
+      )}`;
+
+      newDocument.filePath = await s3StreamObjectCommand(res.pdf, path);
+    } catch (error) {
+      throw new Error(`Error while converting the file: ${error.message}`);
+    }
+
     newDocument.originalUrl = res.pdf;
     newDocument.status = 'COLLECTED';
     newDocument.statusText = res.status;
