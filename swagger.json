@@ -1,8 +1,8 @@
 {
   "info": {
-    "title": "E-Closing API",
+    "title": "Canguru.fit API",
     "version": "1.0.0",
-    "description": "E-Closing API"
+    "description": "Canguru.fit API"
   },
   "openapi": "3.0.0",
   "servers": [
@@ -10,13 +10,13 @@
       "url": "http://localhost:3000/dev"
     },
     {
-      "url": "https://dev.api-eclosing.quill.com.br/v1"
+      "url": "https://dev-api.canguru.fit"
     },
     {
-      "url": "https://homolog.api-eclosing.quill.com.br/v1"
+      "url": "https://homolog-api.canguru.fit"
     },
     {
-      "url": "https://api-eclosing.quill.com.br/v1"
+      "url": "https://api.canguru.fit"
     }
   ],
   "components": {
@@ -33,93 +33,6 @@
       }
     }
   },
-  "paths": {
-    "/diligences": {
-      "post": {
-        "tags": [
-          "diligencesAPI"
-        ],
-        "summary": "Creates a new diligence",
-        "responses": {
-          "200": {
-            "description": "Token exchanged"
-          }
-        }
-      }
-    },
-    "/document-types/": {
-      "post": {
-        "tags": [
-          "DocumentTypesAPI"
-        ],
-        "summary": "Creates a new documentType",
-        "responses": {
-          "200": {
-            "description": "document type created"
-          }
-        }
-      }
-    },
-    "/diligences/legal-persons/": {
-      "post": {
-        "tags": [
-          "LegalPersonsAPI"
-        ],
-        "summary": "Creates a new legal person",
-        "responses": {
-          "200": {
-            "description": "legal person created"
-          }
-        }
-      }
-    },
-    "/diligences/natural-persons/": {
-      "post": {
-        "tags": [
-          "NaturalPersonsAPI"
-        ],
-        "summary": "Creates a new natural person",
-        "responses": {
-          "200": {
-            "description": "natural person created"
-          }
-        }
-      }
-    },
-    "/robots/": {
-      "post": {
-        "tags": [
-          "robotsAPI"
-        ],
-        "summary": "Creates a new robot",
-        "responses": {
-          "200": {
-            "description": "robot created"
-          }
-        }
-      }
-    }
-  },
-  "tags": [
-    {
-      "name": "Diligences API",
-      "description": "diligences API"
-    },
-    {
-      "name": "DocumentTypes API",
-      "description": "DocumentTypes API"
-    },
-    {
-      "name": "LegalPersons API",
-      "description": "LegalPersons API"
-    },
-    {
-      "name": "NaturalPersons API",
-      "description": "NaturalPersons API"
-    },
-    {
-      "name": "Robots API",
-      "description": "robots API"
-    }
-  ]
+  "paths": {},
+  "tags": []
 }

@@ -1,7 +1,7 @@
 {
-  "name": "beds24-api",
+  "name": "canguru-fit-api",
   "version": "1.0.0",
-  "description": "API for Beds24 sync",
+  "description": "canguru.fit app api",
   "main": "serverless.ts",
   "scripts": {
     "start": "nodemon -e js,ts,yml --ignore node_modules --ignore build --exec serverless offline",

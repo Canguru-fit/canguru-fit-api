@@ -7,13 +7,13 @@ export default {
     {
       http: {
         method: 'any',
-        path: 'users',
+        path: 'instructors',
       },
     },
     {
       http: {
         method: 'any',
-        path: 'users/{proxy+}',
+        path: 'instructors/{proxy+}',
       },
     },
   ],

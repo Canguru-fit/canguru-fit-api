@@ -5,7 +5,7 @@ import * as functions from '@functions/index';
 import env from './serverless/envs';
 
 const serverlessConfiguration: AWS = {
-  service: 'eclosing-api',
+  service: 'canguru-fit-api',
   frameworkVersion: '3',
   plugins: [
     'serverless-esbuild',
@@ -21,10 +21,10 @@ const serverlessConfiguration: AWS = {
   useDotenv: true,
   provider: {
     name: 'aws',
-    runtime: 'nodejs16.x',
+    runtime: 'nodejs18.x',
     versionFunctions: false,
     deploymentBucket: {
-      name: 'quill-serverless-framework',
+      name: 'serverless-framework',
     },
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -50,7 +50,7 @@ const serverlessConfiguration: AWS = {
         Action: ['cognito-idp:*'],
         Resource: `arn:aws:cognito-idp:us-east-1:283911962114:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
       },
-      {
+      /* {
         Effect: 'Allow',
         Action: ['s3:*'],
         Resource: [
@@ -60,7 +60,7 @@ const serverlessConfiguration: AWS = {
           `arn:aws:s3:::dev-quill-diligence-app-bucket/*`,
           `arn:aws:s3:::eclosing-dumps/*`,
         ],
-      },
+      }, */
     ],
   },
   // import the function via paths
@@ -72,7 +72,7 @@ const serverlessConfiguration: AWS = {
       minify: false,
       sourcemap: true,
       exclude: ['aws-sdk'],
-      target: 'node16',
+      target: 'node18',
       define: { 'require.resolve': undefined },
       platform: 'node',
       concurrency: 10,

@@ -1,12 +1,12 @@
 const envs = {
   dev: {
-    domain: 'dev-api-eclosing.quill.com.br',
+    domain: 'dev-api.canguru.fit',
   },
   homolog: {
-    domain: 'homolog-api-eclosing.quill.com.br',
+    domain: 'homolog-api.canguru.fit',
   },
   prod: {
-    domain: 'api-eclosing.quill.com.br',
+    domain: 'api.canguru.fit',
   },
 };
 

@@ -1,5 +1,4 @@
-import companyModel from '../../schemas/company.model';
-import usersModel, { User } from '../../schemas/users.model';
+import instructorsModel, { Instructor } from '../../schemas/instructors.model';
 import {
   signUpUser,
   deleteUser,
@@ -11,22 +10,22 @@ import {
   updatePassword as changePassword,
 } from '../../libs/congitoUtils';
 
-export const read = async (): Promise<User[]> => {
-  return usersModel.find().populate({ path: 'company', model: companyModel });
+export const read = async (): Promise<Instructor[]> => {
+  return instructorsModel.find();
 };
 
-export const readOne = async (id: string): Promise<User> => {
-  return usersModel.findById(id).populate({ path: 'company', model: companyModel });
+export const readOne = async (id: string): Promise<Instructor> => {
+  return instructorsModel.findById(id);
 };
 
-export const create = async (user: User & { password: string }): Promise<User> => {
-  const foundUser = await usersModel.findOne({ email: user.email });
+export const create = async (user: Instructor & { password: string }): Promise<Instructor> => {
+  const foundUser = await instructorsModel.findOne({ email: user.email });
 
   if (foundUser) throw new Error('User already exists!');
 
   try {
     await signUpUser(user.email, user.password);
-    return usersModel.create({
+    return instructorsModel.create({
       ...user,
       status: true,
     });
@@ -36,7 +35,7 @@ export const create = async (user: User & { password: string }): Promise<User> =
 };
 
 export const resendTemporaryPassword = async (id: string): Promise<void> => {
-  const user = await usersModel.findById(id);
+  const user = await instructorsModel.findById(id);
 
   if (!user) throw new Error('User not found');
 
@@ -45,37 +44,34 @@ export const resendTemporaryPassword = async (id: string): Promise<void> => {
   } catch (error) {}
 };
 
-export const update = async (_id: string, user: User): Promise<User> => {
-  return usersModel.findOneAndUpdate({ _id }, user);
+export const update = async (_id: string, user: Instructor): Promise<Instructor> => {
+  return instructorsModel.findOneAndUpdate({ _id }, user);
 };
 
-export const toggleStatus = async (_id: string, user: User): Promise<User> => {
+export const toggleStatus = async (_id: string, user: Instructor): Promise<Instructor> => {
   try {
     await toggleUserStatus(user.email, user.status);
-    return usersModel.findOneAndUpdate({ _id }, { status: user.status });
+    return instructorsModel.findOneAndUpdate({ _id }, { status: user.status });
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-export const remove = async (id: string): Promise<User> => {
-  const user = await usersModel.findById(id);
+export const remove = async (id: string): Promise<Instructor> => {
+  const user = await instructorsModel.findById(id);
 
   if (!user) throw new Error('User not found');
 
   try {
     await deleteUser(user.email);
-    return usersModel.findOneAndDelete({ id });
+    return instructorsModel.findOneAndDelete({ id });
   } catch (error) {
     throw new Error(error.message);
   }
 };
 
-export const login = async ({ email, password }): Promise<User> => {
-  const user = await usersModel.findOne({ email }).populate({
-    path: 'company',
-    model: companyModel,
-  });
+export const login = async ({ email, password }): Promise<Instructor> => {
+  const user = await instructorsModel.findOne({ email });
 
   if (!user) throw new Error('User not found');
 
@@ -90,7 +86,7 @@ export const login = async ({ email, password }): Promise<User> => {
   }
 };
 
-export const verifyToken = async (req): Promise<User> => {
+export const verifyToken = async (req): Promise<Instructor> => {
   try {
     return verifySession(req);
   } catch (error) {
@@ -98,8 +94,8 @@ export const verifyToken = async (req): Promise<User> => {
   }
 };
 
-export const forgot = async ({ email }): Promise<any> => {
-  const user = await usersModel.findOne({ email });
+export const forgot = async ({ email }): Promise<unknown> => {
+  const user = await instructorsModel.findOne({ email });
 
   if (!user) throw new Error('User not found');
 
@@ -110,7 +106,7 @@ export const forgot = async ({ email }): Promise<any> => {
   }
 };
 
-export const updatePassword = async ({ code, username, newPassword }): Promise<any> => {
+export const updatePassword = async ({ code, username, newPassword }): Promise<unknown> => {
   if (!code) throw new Error('Missing code');
 
   try {
