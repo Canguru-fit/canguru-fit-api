@@ -24,7 +24,7 @@ const serverlessConfiguration: AWS = {
     runtime: 'nodejs18.x',
     versionFunctions: false,
     deploymentBucket: {
-      name: 'serverless-framework',
+      name: 'canguru-fit-serverless-framework',
     },
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -100,7 +100,7 @@ const serverlessConfiguration: AWS = {
                   },
                 ],
               },
-              UserPoolName: process.env.NODE_ENV !== 'prod' ? `quill-${process.env.NODE_ENV}` : 'quill',
+              UserPoolName: process.env.NODE_ENV !== 'prod' ? `canguru-fit-${process.env.NODE_ENV}` : 'canguru-fit',
               UsernameAttributes: ['email'],
               AutoVerifiedAttributes: ['email'],
               UsernameConfiguration: {
@@ -109,7 +109,7 @@ const serverlessConfiguration: AWS = {
               VerificationMessageTemplate: {
                 DefaultEmailOption: 'CONFIRM_WITH_LINK',
                 EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail. {##Verify Email##} ',
-                EmailSubjectByLink: 'Quill - confirmação de e-mail',
+                EmailSubjectByLink: 'Canguru.fit - Confirmação de e-mail',
               },
               Schema: [
                 {
@@ -144,17 +144,17 @@ const serverlessConfiguration: AWS = {
               AllowedOAuthScopes: ['aws.cognito.signin.user.admin', 'email', 'openid', 'profile'],
               CallbackURLs:
                 process.env.NODE_ENV !== 'prod'
-                  ? ['http://localhost:3000/', 'https://dev.quill.com.br', 'https://homolog.quill.com.br']
-                  : ['https://quill.com.br'],
+                  ? ['http://localhost:3000/', 'https://dev-app.canguru.fit', 'https://homolog-app.canguru.fit']
+                  : ['https://app.canguru.fit'],
               LogoutURLs:
                 process.env.NODE_ENV !== 'prod'
                   ? [
                       'http://localhost:3000/login',
-                      'https://dev.quill.com.br/login',
-                      'https://homolog.quill.com.br/login',
+                      'https://dev-app.canguru.fit/login',
+                      'https://homolog-app.canguru.fit/login',
                     ]
-                  : ['https://quill.com.br/login'],
-              ClientName: process.env.NODE_ENV !== 'prod' ? `quill-${process.env.NODE_ENV}` : 'quill',
+                  : ['https://app.canguru.fit/login'],
+              ClientName: process.env.NODE_ENV !== 'prod' ? `canguru-fit-${process.env.NODE_ENV}` : 'canguru-fit',
               PreventUserExistenceErrors: 'LEGACY',
               UserPoolId: {
                 Ref: 'CognitoUserPool',
@@ -178,7 +178,7 @@ const serverlessConfiguration: AWS = {
           CognitoUserPoolDomain: {
             Type: 'AWS::Cognito::UserPoolDomain',
             Properties: {
-              Domain: `quill-${process.env.NODE_ENV}`,
+              Domain: `canguru-fit-${process.env.NODE_ENV}`,
               UserPoolId: {
                 Ref: 'CognitoUserPool',
               },
@@ -186,7 +186,7 @@ const serverlessConfiguration: AWS = {
           },
         },
       },
-      backoffice: {
+      personal: {
         Resources: {
           CognitoUserPool: {
             Type: 'AWS::Cognito::UserPool',
@@ -199,7 +199,10 @@ const serverlessConfiguration: AWS = {
                   },
                 ],
               },
-              UserPoolName: process.env.NODE_ENV !== 'prod' ? `backoffice-${process.env.NODE_ENV}` : 'backoffice',
+              UserPoolName:
+                process.env.NODE_ENV !== 'prod'
+                  ? `canguru-fit-personal-${process.env.NODE_ENV}`
+                  : 'canguru-fit-personal',
               UsernameAttributes: ['email'],
               AutoVerifiedAttributes: ['email'],
               UsernameConfiguration: {
@@ -208,7 +211,7 @@ const serverlessConfiguration: AWS = {
               VerificationMessageTemplate: {
                 DefaultEmailOption: 'CONFIRM_WITH_LINK',
                 EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail.{##Verify Email##} ',
-                EmailSubjectByLink: 'Quill - confirmação de e-mail',
+                EmailSubjectByLink: 'Canguru.fit - Confirmação de e-mail',
               },
               Schema: [
                 {
@@ -245,20 +248,23 @@ const serverlessConfiguration: AWS = {
                 process.env.NODE_ENV !== 'prod'
                   ? [
                       'http://localhost:3000/',
-                      'https://dev-backoffice.quill.com.br',
-                      'https://homolog-backoffice.quill.com.br',
+                      'https://dev-personal.canguru.fit',
+                      'https://homolog-personal.canguru.fit',
                     ]
-                  : ['https://backoffice.quill.com.br'],
+                  : ['https://personal.canguru.fit'],
               LogoutURLs:
                 // analisar urls
                 process.env.NODE_ENV !== 'prod'
                   ? [
                       'http://localhost:3000/login',
-                      'https://dev-backoffice.quill.com.br/login',
-                      'https://homolog-backoffice.quill.com.br/login',
+                      'https://dev-personal.canguru.fit/login',
+                      'https://homolog-personal.canguru.fit/login',
                     ]
-                  : ['https://backoffice.quill.com.br/login'],
-              ClientName: process.env.NODE_ENV !== 'prod' ? `backoffice-${process.env.NODE_ENV}` : 'backoffice',
+                  : ['https://personal.canguru.fit/login'],
+              ClientName:
+                process.env.NODE_ENV !== 'prod'
+                  ? `canguru-fit-personal-${process.env.NODE_ENV}`
+                  : 'canguru-fit-personal',
               PreventUserExistenceErrors: 'LEGACY',
               UserPoolId: {
                 Ref: 'CognitoUserPool',
@@ -281,7 +287,7 @@ const serverlessConfiguration: AWS = {
           CognitoUserPoolDomain: {
             Type: 'AWS::Cognito::UserPoolDomain',
             Properties: {
-              Domain: `backoffice-${process.env.NODE_ENV}`,
+              Domain: `personal-${process.env.NODE_ENV}`,
               UserPoolId: {
                 Ref: 'CognitoUserPool',
               },
