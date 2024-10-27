@@ -1,4 +1,4 @@
-name: Homolog Deploy
+name: UAT Deploy
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
-    environment: homolog
+    environment: uat
     strategy:
       matrix:
         node-version: [18.x]

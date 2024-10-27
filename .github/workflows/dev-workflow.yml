@@ -22,13 +22,15 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
-    - uses: actions/checkout@v3
-    - name:  Use Node.js 16.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-    - run: yarn
-    - name: serverless deploy
-      uses: serverless/github-action@v3.1
-      with:
-        args: deploy --stage ${{secrets.NODE_ENV}}
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install
+        run: yarn
+      - name: serverless deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: deploy --stage ${{secrets.NODE_ENV}}
