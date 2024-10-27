@@ -5,6 +5,9 @@ const envs = {
   homolog: {
     domain: 'homolog-api.canguru.fit',
   },
+  uat: {
+    domain: 'uat-api.canguru.fit',
+  },
   prod: {
     domain: 'api.canguru.fit',
   },
