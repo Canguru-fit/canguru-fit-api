@@ -2,7 +2,8 @@
 import type { AWS } from '@serverless/typescript';
 
 import * as functions from '@functions/index';
-import env from './serverless/envs';
+// import env from './serverless/envs';
+import 'dotenv/config';
 
 const serverlessConfiguration: AWS = {
   service: 'canguru-fit-api',
@@ -78,8 +79,8 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     customDomain: {
-      domainName: env[process.env.NODE_ENV || 'dev'].domain,
-      stage: process.env.NODE_ENV,
+      domainName: 'api.canguru.fit',
+      stage: 'prod',
       basePath: 'v1',
       createRoute53Record: true,
     },

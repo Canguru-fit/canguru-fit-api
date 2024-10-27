@@ -3,6 +3,7 @@ import express, { Router } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import 'express-async-errors';
+import errorMiddleware from './ErrorMiddleware';
 
 export const handlerPath = (context: string) => {
   return `${context.split(process.cwd())[1].substring(1).replace(/\\/g, '/')}`;
@@ -22,9 +23,7 @@ export const generateHandler = async (router: Router): Promise<Handler> => {
     );
     app.use(express.json({ limit: '200mb' }));
     app.use(router);
-    app.use((err, _req, res, _next) => {
-      res.status(500).send({ message: 'Something went wrong.', error: err.stack });
-    });
+    app.use(errorMiddleware);
     return serverless(app, { basePath: '/v1', binary: ['*/*'] });
   } catch (error) {
     return error;

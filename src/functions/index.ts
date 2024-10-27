@@ -1,2 +1,4 @@
-export { default as instructors } from './instructors';
-export { default as preSignUpTrigger } from './pre-sign-up-trigger';
+export { default as exercisesApi } from './exercises-api';
+export { default as exercisesRepoApi } from './exercises-repo-api';
+export { default as instructorsApi } from './instructors-api';
+export { default as routinesApi } from './routines-api';
