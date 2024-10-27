@@ -42,12 +42,17 @@ const serverlessConfiguration: AWS = {
       BUCKET_NAME: process.env.BUCKET_NAME,
       AWS_COGNITO_POOL_ID: process.env.AWS_COGNITO_POOL_ID,
       AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
+      AWS_COGNITO_PERSONAL_POOL_ID: process.env.AWS_COGNITO_PERSONAL_POOL_ID,
+      AWS_COGNITO_PERSONAL_CLIENT_ID: process.env.AWS_COGNITO_PERSONAL_CLIENT_ID,
     },
     iamRoleStatements: [
       {
         Effect: 'Allow',
         Action: ['cognito-idp:*'],
-        Resource: `arn:aws:cognito-idp:us-east-1:283911962114:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
+        Resource: [
+          `arn:aws:cognito-idp:us-east-1:694313933492:userpool/${process.env.AWS_COGNITO_POOL_ID}`,
+          `arn:aws:cognito-idp:us-east-1:694313933492:userpool/${process.env.AWS_COGNITO_PERSONAL_POOL_ID}`,
+        ],
       },
       /* {
         Effect: 'Allow',
