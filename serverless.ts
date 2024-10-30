@@ -259,7 +259,6 @@ const serverlessConfiguration: AWS = {
           },
           CognitoIdentityProviderGoogle: {
             Type: 'AWS::Cognito::UserPoolIdentityProvider',
-            DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AttributeMapping: {
                 email: 'email',
@@ -282,7 +281,7 @@ const serverlessConfiguration: AWS = {
           },
           CognitoUserPoolClient: {
             Type: 'AWS::Cognito::UserPoolClient',
-
+            DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AccessTokenValidity: 180,
               IdTokenValidity: 180,
