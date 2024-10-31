@@ -12,11 +12,15 @@ import {
   ForgotPasswordCommand,
   ConfirmForgotPasswordCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwksClient from 'jwks-rsa';
 import jwkToPem from 'jwk-to-pem';
 import axios from 'axios';
+import Exception from './Exceptions';
 
-const DEFAULT_USER_POOL_ID = process.env.AWS_COGNITO_POOL_ID;
+const DEFAULT_USER_POOL_ID = process.env.AWS_COGNITO_PERSONAL_POOL_ID;
+const DEFAULT_USER_CLIENT_ID = process.env.AWS_COGNITO_PERSONAL_CLIENT_ID;
+
 const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 client.config.credentials();
 
@@ -44,9 +48,13 @@ export const createUser = async (Username: string, UserPoolId: string = DEFAULT_
   }
 };
 
-export const signUpUser = async (Username: string, Password: string): Promise<void> => {
+export const signUpUser = async (
+  Username: string,
+  Password: string,
+  ClientId: string = DEFAULT_USER_CLIENT_ID
+): Promise<unknown> => {
   const SignUpCommandInput = {
-    ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+    ClientId,
     Username,
     Password,
     UserAttributes: [
@@ -57,15 +65,8 @@ export const signUpUser = async (Username: string, Password: string): Promise<vo
     ],
   };
 
-  try {
-    const command = new SignUpCommand(SignUpCommandInput);
-    const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
-    client.config.credentials();
-    await client.send(command);
-  } catch (error) {
-    if (error.name === 'UsernameExistsException') throw Error('User already exists');
-    throw Error(error);
-  }
+  const command = new SignUpCommand(SignUpCommandInput);
+  return client.send(command);
 };
 
 export const getUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
@@ -151,21 +152,19 @@ export const resetPassword = async (
   }
 };
 
-export const initiateAuth = async ({ username, password }) => {
+export const initiateAuth = async (
+  AuthParameters,
+  ClientId = DEFAULT_USER_CLIENT_ID,
+  AuthFlow: AuthFlowType = AuthFlowType.USER_PASSWORD_AUTH
+) => {
+  console.log(JSON.stringify(AuthParameters));
   const command = new InitiateAuthCommand({
-    AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
-    AuthParameters: {
-      USERNAME: username,
-      PASSWORD: password,
-    },
-    ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+    AuthFlow,
+    AuthParameters,
+    ClientId,
   });
 
   try {
-    const client = new CognitoIdentityProviderClient({
-      region: process.env.AWS_REGION,
-    });
-    client.config.credentials();
     const response = await client.send(command);
     return response.AuthenticationResult;
   } catch (error) {
@@ -173,34 +172,38 @@ export const initiateAuth = async ({ username, password }) => {
   }
 };
 
-export const verifyToken = async (req: Request) => {
-  try {
-    const data = await axios.get(
-      `https://cognito-idp.us-east-1.amazonaws.com/${process.env.AWS_COGNITO_POOL_ID}/.well-known/jwks.json`
-    );
+export const verifyToken = async (authorization, UserPoolId = DEFAULT_USER_POOL_ID) => {
+  const jwkClient = jwksClient({
+    jwksUri: `https://cognito-idp.us-east-1.amazonaws.com/${UserPoolId}/.well-known/jwks.json`,
+  });
 
-    const authorization = req.headers?.authorization as string;
+  const getKey = (header: jwt.JwtHeader, callback: jwt.SigningKeyCallback): void => {
+    jwkClient.getSigningKey(header.kid, (err, key) => {
+      if (err) {
+        callback(err, null);
+        return;
+      }
+      const signingKey = key.getPublicKey();
+      callback(null, signingKey);
+    });
+  };
 
-    if (!authorization) {
-      throw new Error('Missing token.');
-    }
+  const token = authorization?.split(' ')?.[1] || '';
 
-    const token = authorization.split(' ')[1];
+  if (!token) throw new Exception(Exception.UNAUTHORIZED);
 
-    const pem = jwkToPem(JSON.parse(data.data));
-
-    const auth = jwt.verify(token, pem, { algorithms: ['RS256'] });
-
-    return auth;
-  } catch (error) {
-    return error;
-  }
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, getKey, { algorithms: ['RS256'] }, async (err, decoded: JwtPayload | undefined) => {
+      if (err) return reject(err);
+      return resolve(decoded);
+    });
+  });
 };
 
-export const forgotPassword = async (Username: string): Promise<unknown> => {
+export const forgotPassword = async (Username: string, ClientId = DEFAULT_USER_CLIENT_ID): Promise<unknown> => {
   try {
     const forgotPasswordCommandInput = {
-      ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+      ClientId,
       Username,
     };
 
@@ -211,10 +214,15 @@ export const forgotPassword = async (Username: string): Promise<unknown> => {
   }
 };
 
-export const updatePassword = async (code: string, username: string, newPassword: string): Promise<unknown> => {
+export const updatePassword = async (
+  code: string,
+  username: string,
+  newPassword: string,
+  ClientId = DEFAULT_USER_CLIENT_ID
+): Promise<unknown> => {
   try {
     const updatePasswordCommandInput = {
-      ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+      ClientId,
       ConfirmationCode: code,
       Password: newPassword,
       Username: username,

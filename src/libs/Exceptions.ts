@@ -14,6 +14,18 @@ class Exception extends Error {
 
   field_errors?: string[];
 
+  public static readonly UNAUTHORIZED = {
+    message: 'Unauthorized',
+    status: 401,
+    code: '401',
+  };
+
+  public static readonly USER_ALREADY_EXIST = {
+    message: 'Email already used',
+    status: 406,
+    code: '001',
+  };
+
   public static readonly DATA_NOT_FOUND = {
     message: 'Data not found',
     status: 404,

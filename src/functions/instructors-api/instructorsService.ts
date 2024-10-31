@@ -8,7 +8,7 @@ import {
   verifyToken as verifySession,
   forgotPassword,
   updatePassword as changePassword,
-} from '../../libs/congitoUtils';
+} from '../../libs/cognitoUtils';
 
 export const read = async (): Promise<Instructor[]> => {
   return instructorsModel.find();
