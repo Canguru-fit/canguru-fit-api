@@ -6,6 +6,7 @@ export const readOne = async (id: string): Promise<ExercisesRepo> => {
 };
 
 export const read = async (): Promise<ExercisesRepo[]> => {
+  console.log(process.env.AWS_EXECUTION_ENV);
   return exercisesRepoModel.find();
 };
 
