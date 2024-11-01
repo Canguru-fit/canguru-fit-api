@@ -135,31 +135,31 @@ const serverlessConfiguration: AWS = {
               },
             },
           },
-          CognitoIdentityProviderGoogle: {
-            Type: 'AWS::Cognito::UserPoolIdentityProvider',
-            Properties: {
-              AttributeMapping: {
-                email: 'email',
-                email_verified: 'email_verified',
-                given_name: 'given_name',
-                family_name: 'family_name',
-                username: 'sub',
-              },
-              ProviderDetails: {
-                client_id: process.env.GOOGLE_CLIENT_ID,
-                client_secret: process.env.GOOGLE_SECRET_KEY,
-                authorize_scopes: 'email openid profile',
-              },
-              ProviderName: 'Google',
-              ProviderType: 'Google',
-              UserPoolId: {
-                Ref: 'CognitoUserPool',
-              },
-            },
-          },
+          // CognitoIdentityProviderGoogle: {
+          //   Type: 'AWS::Cognito::UserPoolIdentityProvider',
+          //   Properties: {
+          //     AttributeMapping: {
+          //       email: 'email',
+          //       email_verified: 'email_verified',
+          //       given_name: 'given_name',
+          //       family_name: 'family_name',
+          //       username: 'sub',
+          //     },
+          //     ProviderDetails: {
+          //       client_id: process.env.GOOGLE_CLIENT_ID,
+          //       client_secret: process.env.GOOGLE_SECRET_KEY,
+          //       authorize_scopes: 'email openid profile',
+          //     },
+          //     ProviderName: 'Google',
+          //     ProviderType: 'Google',
+          //     UserPoolId: {
+          //       Ref: 'CognitoUserPool',
+          //     },
+          //   },
+          // },
           CognitoUserPoolClient: {
             Type: 'AWS::Cognito::UserPoolClient',
-            DependsOn: ['CognitoIdentityProviderGoogle'],
+            // DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AccessTokenValidity: 180,
               IdTokenValidity: 180,
@@ -257,31 +257,31 @@ const serverlessConfiguration: AWS = {
               },
             },
           },
-          CognitoIdentityProviderGoogle: {
-            Type: 'AWS::Cognito::UserPoolIdentityProvider',
-            Properties: {
-              AttributeMapping: {
-                email: 'email',
-                email_verified: 'email_verified',
-                given_name: 'given_name',
-                family_name: 'family_name',
-                username: 'sub',
-              },
-              ProviderDetails: {
-                client_id: process.env.GOOGLE_CLIENT_ID,
-                client_secret: process.env.GOOGLE_SECRET_KEY,
-                authorize_scopes: 'email openid profile',
-              },
-              ProviderName: 'Google',
-              ProviderType: 'Google',
-              UserPoolId: {
-                Ref: 'CognitoUserPool',
-              },
-            },
-          },
+          // CognitoIdentityProviderGoogle: {
+          //   Type: 'AWS::Cognito::UserPoolIdentityProvider',
+          //   Properties: {
+          //     AttributeMapping: {
+          //       email: 'email',
+          //       email_verified: 'email_verified',
+          //       given_name: 'given_name',
+          //       family_name: 'family_name',
+          //       username: 'sub',
+          //     },
+          //     ProviderDetails: {
+          //       client_id: process.env.GOOGLE_CLIENT_ID,
+          //       client_secret: process.env.GOOGLE_SECRET_KEY,
+          //       authorize_scopes: 'email openid profile',
+          //     },
+          //     ProviderName: 'Google',
+          //     ProviderType: 'Google',
+          //     UserPoolId: {
+          //       Ref: 'CognitoUserPool',
+          //     },
+          //   },
+          // },
           CognitoUserPoolClient: {
             Type: 'AWS::Cognito::UserPoolClient',
-            DependsOn: ['CognitoIdentityProviderGoogle'],
+            // DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AccessTokenValidity: 180,
               IdTokenValidity: 180,
