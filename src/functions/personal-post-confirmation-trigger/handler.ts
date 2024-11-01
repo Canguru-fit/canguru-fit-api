@@ -8,7 +8,7 @@ export const run: PostConfirmationTriggerHandler = async (event: PostConfirmatio
     console.log(JSON.stringify(event));
     await personalsService.create({
       email: event.request.userAttributes.email,
-      name: event.request.userAttributes.email,
+      name: event.request.userAttributes.name,
       cognitoId: event.userName,
     });
 
