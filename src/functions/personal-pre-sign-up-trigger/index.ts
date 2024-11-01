@@ -9,6 +9,7 @@ export default {
         pool: process.env.NODE_ENV !== 'prod' ? `canguru-fit-personal-${process.env.NODE_ENV}` : 'canguru-fit-personal',
         trigger: 'PreSignUp' as const,
         existing: true,
+        forceDeploy: true,
       },
     },
   ],

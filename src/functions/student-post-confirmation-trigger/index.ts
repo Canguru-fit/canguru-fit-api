@@ -9,6 +9,7 @@ export default {
         pool: process.env.NODE_ENV !== 'prod' ? `canguru-fit-${process.env.NODE_ENV}` : 'canguru-fit',
         trigger: 'PostConfirmation' as const,
         existing: true,
+        forceDeploy: true,
       },
     },
   ],
