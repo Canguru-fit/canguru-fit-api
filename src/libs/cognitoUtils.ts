@@ -11,11 +11,12 @@ import {
   SignUpCommand,
   ForgotPasswordCommand,
   ConfirmForgotPasswordCommand,
+  ConfirmSignUpCommand,
+  ResendConfirmationCodeCommand,
+  AdminLinkProviderForUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-import jwkToPem from 'jwk-to-pem';
-import axios from 'axios';
 import Exception from './Exceptions';
 
 const DEFAULT_USER_POOL_ID = process.env.AWS_COGNITO_PERSONAL_POOL_ID;
@@ -25,27 +26,17 @@ const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGIO
 client.config.credentials();
 
 export const createUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
-  try {
-    const createUserCommandInput = {
-      UserPoolId,
-      Username,
-      UserAttributes: [
-        {
-          Name: 'email',
-          Value: Username,
-        },
-        {
-          Name: 'email_verified',
-          Value: 'true',
-        },
-      ],
-    };
+  const createUserCommandInput = {
+    UserPoolId,
+    Username,
+    UserAttributes: [
+      { Name: 'email', Value: Username },
+      { Name: 'email_verified', Value: 'true' },
+    ],
+  };
 
-    const command = new AdminCreateUserCommand(createUserCommandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error creating user: ${error.message}`);
-  }
+  const command = new AdminCreateUserCommand(createUserCommandInput);
+  return client.send(command);
 };
 
 export const signUpUser = async (
@@ -69,32 +60,25 @@ export const signUpUser = async (
   return client.send(command);
 };
 
-export const getUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
-  try {
-    const commandInput = {
-      UserPoolId,
-      Username,
-    };
+export const confirmSignup = async (Username, ConfirmationCode, ClientId = DEFAULT_USER_CLIENT_ID) => {
+  const command = new ConfirmSignUpCommand({ ClientId, Username, ConfirmationCode, ForceAliasCreation: true });
+  return client.send(command);
+};
 
-    const command = new AdminGetUserCommand(commandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error reading user: ${error.message}`);
-  }
+export const getUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
+  const command = new AdminGetUserCommand({
+    UserPoolId,
+    Username,
+  });
+  return client.send(command);
 };
 
 export const deleteUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
-  try {
-    const commandInput = {
-      UserPoolId,
-      Username,
-    };
-
-    const command = new AdminDeleteUserCommand(commandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error deleting user: ${error.message}`);
-  }
+  const command = new AdminDeleteUserCommand({
+    UserPoolId,
+    Username,
+  });
+  return client.send(command);
 };
 
 export const toggleUserStatus = async (
@@ -102,34 +86,24 @@ export const toggleUserStatus = async (
   condition: boolean,
   UserPoolId: string = DEFAULT_USER_POOL_ID
 ): Promise<unknown> => {
-  try {
-    const commandInput = {
-      UserPoolId,
-      Username,
-    };
-    const command = condition ? new AdminEnableUserCommand(commandInput) : new AdminDisableUserCommand(commandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error enabling/disabling user: ${error.message}`);
-  }
+  const commandInput = {
+    UserPoolId,
+    Username,
+  };
+  const command = condition ? new AdminEnableUserCommand(commandInput) : new AdminDisableUserCommand(commandInput);
+  return client.send(command);
 };
 
 export const resendTempPassword = async (
   Username: string,
   UserPoolId: string = DEFAULT_USER_POOL_ID
 ): Promise<unknown> => {
-  try {
-    const commandInput = {
-      UserPoolId,
-      Username,
-      MessageAction: 'RESEND',
-    };
-
-    const command = new AdminCreateUserCommand(commandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error while resending user password: ${error}`);
-  }
+  const command = new AdminCreateUserCommand({
+    UserPoolId,
+    Username,
+    MessageAction: 'RESEND',
+  });
+  return client.send(command);
 };
 
 export const resetPassword = async (
@@ -137,19 +111,13 @@ export const resetPassword = async (
   Password: string,
   UserPoolId: string = DEFAULT_USER_POOL_ID
 ): Promise<unknown> => {
-  try {
-    const input = {
-      UserPoolId,
-      Username,
-      Password,
-      Permanent: true,
-    };
-
-    const command = new AdminSetUserPasswordCommand(input);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error while reseting user password: ${error}`);
-  }
+  const command = new AdminSetUserPasswordCommand({
+    UserPoolId,
+    Username,
+    Password,
+    Permanent: true,
+  });
+  return client.send(command);
 };
 
 export const initiateAuth = async (
@@ -157,19 +125,14 @@ export const initiateAuth = async (
   ClientId = DEFAULT_USER_CLIENT_ID,
   AuthFlow: AuthFlowType = AuthFlowType.USER_PASSWORD_AUTH
 ) => {
-  console.log(JSON.stringify(AuthParameters));
   const command = new InitiateAuthCommand({
     AuthFlow,
     AuthParameters,
     ClientId,
   });
 
-  try {
-    const response = await client.send(command);
-    return response.AuthenticationResult;
-  } catch (error) {
-    throw new Error(error);
-  }
+  const response = await client.send(command);
+  return response.AuthenticationResult;
 };
 
 export const verifyToken = async (authorization, UserPoolId = DEFAULT_USER_POOL_ID) => {
@@ -201,17 +164,11 @@ export const verifyToken = async (authorization, UserPoolId = DEFAULT_USER_POOL_
 };
 
 export const forgotPassword = async (Username: string, ClientId = DEFAULT_USER_CLIENT_ID): Promise<unknown> => {
-  try {
-    const forgotPasswordCommandInput = {
-      ClientId,
-      Username,
-    };
-
-    const command = new ForgotPasswordCommand(forgotPasswordCommandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error creating user: ${error.message}`);
-  }
+  const command = new ForgotPasswordCommand({
+    ClientId,
+    Username,
+  });
+  return client.send(command);
 };
 
 export const updatePassword = async (
@@ -220,17 +177,37 @@ export const updatePassword = async (
   newPassword: string,
   ClientId = DEFAULT_USER_CLIENT_ID
 ): Promise<unknown> => {
-  try {
-    const updatePasswordCommandInput = {
-      ClientId,
-      ConfirmationCode: code,
-      Password: newPassword,
-      Username: username,
-    };
+  const command = new ConfirmForgotPasswordCommand({
+    ClientId,
+    ConfirmationCode: code,
+    Password: newPassword,
+    Username: username,
+  });
+  return client.send(command);
+};
 
-    const command = new ConfirmForgotPasswordCommand(updatePasswordCommandInput);
-    return await client.send(command);
-  } catch (error) {
-    throw new Error(`Error creating user: ${error.message}`);
-  }
+export const resendConfirmation = async (Username: string, ClientId = DEFAULT_USER_CLIENT_ID) => {
+  const command = new ResendConfirmationCodeCommand({ ClientId, Username });
+  return client.send(command);
+};
+
+export const linkProviderUser = async (
+  Username: string,
+  ProviderValue: string,
+  UserPoolId: string = DEFAULT_USER_POOL_ID,
+  ProviderName: string = 'Google'
+): Promise<any> => {
+  const command = new AdminLinkProviderForUserCommand({
+    UserPoolId,
+    DestinationUser: {
+      ProviderName: 'Cognito',
+      ProviderAttributeValue: Username,
+    },
+    SourceUser: {
+      ProviderName,
+      ProviderAttributeName: 'Cognito_Subject',
+      ProviderAttributeValue: ProviderValue,
+    },
+  });
+  return client.send(command);
 };

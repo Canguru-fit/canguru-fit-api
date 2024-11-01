@@ -25,6 +25,21 @@ export const signUp = (source: ISource, body: { email: string; password: string 
   }
 };
 
+export const confirmSignUp = async (source: ISource, body) => {
+  const { userName, code } = body;
+  return cognitoUtils.confirmSignup(userName, code, cognito[source].ClientId);
+};
+
+export const forgotPassword = async (source: ISource, body) => {
+  const { userName } = body;
+  return cognitoUtils.forgotPassword(userName, cognito[source].ClientId);
+};
+
+export const resendConfirmation = async (source: ISource, body) => {
+  const { userName } = body;
+  return cognitoUtils.resendConfirmation(userName, cognito[source].ClientId);
+};
+
 export const login = (source: ISource, body: { email: string; password: string }) => {
   const { ClientId } = cognito[source];
   const { email, password } = body;
@@ -50,7 +65,7 @@ export const validateToken = (source: ISource, authorization: string) => {
 
 export const refreshToken = (source: ISource, body) => {
   const { ClientId } = cognito[source];
-  const { email, refreshToken } = body;
+  const { refreshToken } = body;
   try {
     return cognitoUtils.initiateAuth({ REFRESH_TOKEN: refreshToken }, ClientId, 'REFRESH_TOKEN');
   } catch (error) {

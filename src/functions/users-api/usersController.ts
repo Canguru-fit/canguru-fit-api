@@ -5,6 +5,20 @@ export const signUp = async (req: Request, res: Response): Promise<Response> => 
   return res.send(await usersService.signUp(req.params.source as unknown as 'personal' | 'student', req.body));
 };
 
+export const confirmSignUp = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.confirmSignUp(req.params.source as unknown as 'personal' | 'student', req.body));
+};
+
+export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.forgotPassword(req.params.source as unknown as 'personal' | 'student', req.body));
+};
+
+export const resendConfirmation = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(
+    await usersService.resendConfirmation(req.params.source as unknown as 'personal' | 'student', req.body)
+  );
+};
+
 export const login = async (req: Request, res: Response): Promise<Response> => {
   return res.send(await usersService.login(req.params.source as unknown as 'personal' | 'student', req.body));
 };
