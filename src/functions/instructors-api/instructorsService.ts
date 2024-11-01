@@ -7,8 +7,8 @@ import {
   initiateAuth,
   verifyToken as verifySession,
   forgotPassword,
-  updatePassword as changePassword,
-} from '../../libs/congitoUtils';
+  confirmForgotPassword,
+} from '../../libs/cognitoUtils';
 
 export const read = async (): Promise<Instructor[]> => {
   return instructorsModel.find();
@@ -110,7 +110,7 @@ export const updatePassword = async ({ code, username, newPassword }): Promise<u
   if (!code) throw new Error('Missing code');
 
   try {
-    return changePassword(code, username, newPassword);
+    return confirmForgotPassword(code, username, newPassword);
   } catch (error) {
     throw new Error(error.message);
   }

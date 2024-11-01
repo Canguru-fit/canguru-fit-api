@@ -111,9 +111,9 @@ const serverlessConfiguration: AWS = {
                 CaseSensitive: false,
               },
               VerificationMessageTemplate: {
-                DefaultEmailOption: 'CONFIRM_WITH_LINK',
-                EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail. {##Verify Email##} ',
-                EmailSubjectByLink: 'Canguru.fit - Confirmação de e-mail',
+                DefaultEmailOption: 'CONFIRM_WITH_CODE',
+                EmailSubject: 'Canguru.fit - Confirmação de e-mail',
+                EmailMessage: 'Seu código de verificação do email no Canguru.fit é {####}.',
               },
               Schema: [
                 {
@@ -135,10 +135,31 @@ const serverlessConfiguration: AWS = {
               },
             },
           },
+          CognitoIdentityProviderGoogle: {
+            Type: 'AWS::Cognito::UserPoolIdentityProvider',
+            Properties: {
+              AttributeMapping: {
+                email: 'email',
+                email_verified: 'email_verified',
+                given_name: 'given_name',
+                family_name: 'family_name',
+                username: 'sub',
+              },
+              ProviderDetails: {
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_SECRET_KEY,
+                authorize_scopes: 'email openid profile',
+              },
+              ProviderName: 'Google',
+              ProviderType: 'Google',
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+            },
+          },
           CognitoUserPoolClient: {
             Type: 'AWS::Cognito::UserPoolClient',
-            // DependsOn: ['CognitoIdentityProviderGoogle', 'CognitoIdentityProviderFacebook'],
-            DependsOn: [],
+            DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AccessTokenValidity: 180,
               IdTokenValidity: 180,
@@ -170,8 +191,7 @@ const serverlessConfiguration: AWS = {
                 'ALLOW_ADMIN_USER_PASSWORD_AUTH',
               ],
               GenerateSecret: false,
-              // SupportedIdentityProviders: ['COGNITO', 'Facebook', 'Google'],
-              SupportedIdentityProviders: ['COGNITO'],
+              SupportedIdentityProviders: ['COGNITO', 'Google'],
               TokenValidityUnits: {
                 AccessToken: 'minutes',
                 IdToken: 'minutes',
@@ -213,9 +233,9 @@ const serverlessConfiguration: AWS = {
                 CaseSensitive: false,
               },
               VerificationMessageTemplate: {
-                DefaultEmailOption: 'CONFIRM_WITH_LINK',
-                EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail.{##Verify Email##} ',
-                EmailSubjectByLink: 'Canguru.fit - Confirmação de e-mail',
+                DefaultEmailOption: 'CONFIRM_WITH_CODE',
+                EmailSubject: 'Canguru.fit - Confirmação de e-mail',
+                EmailMessage: 'Seu código de verificação do email no Canguru.fit é {####}.',
               },
               Schema: [
                 {
@@ -237,9 +257,31 @@ const serverlessConfiguration: AWS = {
               },
             },
           },
+          CognitoIdentityProviderGoogle: {
+            Type: 'AWS::Cognito::UserPoolIdentityProvider',
+            Properties: {
+              AttributeMapping: {
+                email: 'email',
+                email_verified: 'email_verified',
+                given_name: 'given_name',
+                family_name: 'family_name',
+                username: 'sub',
+              },
+              ProviderDetails: {
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_SECRET_KEY,
+                authorize_scopes: 'email openid profile',
+              },
+              ProviderName: 'Google',
+              ProviderType: 'Google',
+              UserPoolId: {
+                Ref: 'CognitoUserPool',
+              },
+            },
+          },
           CognitoUserPoolClient: {
             Type: 'AWS::Cognito::UserPoolClient',
-
+            DependsOn: ['CognitoIdentityProviderGoogle'],
             Properties: {
               AccessTokenValidity: 180,
               IdTokenValidity: 180,
@@ -280,7 +322,7 @@ const serverlessConfiguration: AWS = {
                 'ALLOW_ADMIN_USER_PASSWORD_AUTH',
               ],
               GenerateSecret: false,
-              SupportedIdentityProviders: ['COGNITO'],
+              SupportedIdentityProviders: ['COGNITO', 'Google'],
               TokenValidityUnits: {
                 AccessToken: 'minutes',
                 IdToken: 'minutes',
