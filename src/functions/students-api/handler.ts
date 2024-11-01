@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyEventV2, Context } from 'aws-lambda';
 import { generateHandler } from '@libs/handler-resolver';
 import { connect } from '@libs/mongooseHelper';
-import routes from './exerciseRouter';
+import routes from './studentsRouter';
 
 export const run = async (event: APIGatewayProxyEvent | APIGatewayProxyEventV2, context: Context) => {
   // Make sure to add this so you can re-use `conn` between function calls.
