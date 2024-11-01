@@ -13,6 +13,16 @@ export const forgotPassword = async (req: Request, res: Response): Promise<Respo
   return res.send(await usersService.forgotPassword(req.params.source as unknown as 'personal' | 'student', req.body));
 };
 
+export const confirmForgotPassword = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(
+    await usersService.confirmForgotPassword(req.params.source as unknown as 'personal' | 'student', req.body)
+  );
+};
+
+export const changePassword = async (req: Request, res: Response): Promise<Response> => {
+  return res.send(await usersService.changePassword(req.params.source as unknown as 'personal' | 'student', req.body));
+};
+
 export const resendConfirmation = async (req: Request, res: Response): Promise<Response> => {
   return res.send(
     await usersService.resendConfirmation(req.params.source as unknown as 'personal' | 'student', req.body)

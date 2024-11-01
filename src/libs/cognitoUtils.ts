@@ -14,6 +14,7 @@ import {
   ConfirmSignUpCommand,
   ResendConfirmationCodeCommand,
   AdminLinkProviderForUserCommand,
+  ChangePasswordCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
@@ -171,7 +172,7 @@ export const forgotPassword = async (Username: string, ClientId = DEFAULT_USER_C
   return client.send(command);
 };
 
-export const updatePassword = async (
+export const confirmForgotPassword = async (
   code: string,
   username: string,
   newPassword: string,
@@ -182,6 +183,19 @@ export const updatePassword = async (
     ConfirmationCode: code,
     Password: newPassword,
     Username: username,
+  });
+  return client.send(command);
+};
+
+export const changePassword = async (
+  PreviousPassword: string,
+  ProposedPassword: string,
+  AccessToken: string
+): Promise<unknown> => {
+  const command = new ChangePasswordCommand({
+    PreviousPassword,
+    ProposedPassword,
+    AccessToken,
   });
   return client.send(command);
 };

@@ -233,9 +233,9 @@ const serverlessConfiguration: AWS = {
                 CaseSensitive: false,
               },
               VerificationMessageTemplate: {
-                DefaultEmailOption: 'CONFIRM_WITH_LINK',
-                EmailMessageByLink: 'Clique no link abaixo para verificar seu endereço de e-mail.{##Verify Email##} ',
-                EmailSubjectByLink: 'Canguru.fit - Confirmação de e-mail',
+                DefaultEmailOption: 'CONFIRM_WITH_CODE',
+                EmailSubject: 'Canguru.fit - Confirmação de e-mail',
+                EmailMessage: 'Seu código de verificação do email no Canguru.fit é {####}.',
               },
               Schema: [
                 {
