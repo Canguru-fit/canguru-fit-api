@@ -2,6 +2,16 @@ import * as cognitoUtils from '@libs/cognitoUtils';
 import Exception from '@libs/Exceptions';
 
 type ISource = 'personal' | 'student';
+type IUser = {
+  email: string;
+  name: string;
+  password: string;
+  code: string;
+  previousPassword: string;
+  newPassword: string;
+  token: string;
+  refreshToken: string;
+};
 
 const cognito = {
   personal: {
@@ -14,38 +24,37 @@ const cognito = {
   },
 };
 
-export const signUp = (source: ISource, body: { email: string; password: string }) => {
-  const { ClientId } = cognito[source];
-  const { email, password } = body;
+export const signUp = (source: ISource, body: Partial<IUser>) => {
+  const { email, password, name } = body;
   try {
-    return cognitoUtils.signUpUser(email?.toLowerCase(), password, ClientId);
+    return cognitoUtils.signUpUser(email?.toLowerCase(), password, name, cognito[source].ClientId);
   } catch (error) {
     if (error.name === 'UsernameExistsException') throw new Exception(Exception.USER_ALREADY_EXIST);
     throw Error(error);
   }
 };
 
-export const confirmSignUp = async (source: ISource, body) => {
+export const confirmSignUp = async (source: ISource, body: Partial<IUser>) => {
   const { email, code } = body;
   return cognitoUtils.confirmSignup(email, code, cognito[source].ClientId);
 };
 
-export const forgotPassword = async (source: ISource, body) => {
+export const forgotPassword = async (source: ISource, body: Partial<IUser>) => {
   const { email } = body;
   return cognitoUtils.forgotPassword(email, cognito[source].ClientId);
 };
 
-export const confirmForgotPassword = async (source: ISource, body) => {
+export const confirmForgotPassword = async (source: ISource, body: Partial<IUser>) => {
   const { code, email, password } = body;
   return cognitoUtils.confirmForgotPassword(code, email, password, cognito[source].ClientId);
 };
 
-export const changePassword = async (source: ISource, body) => {
+export const changePassword = async (source: ISource, body: Partial<IUser>) => {
   const { previousPassword, newPassword, token } = body;
   return cognitoUtils.changePassword(previousPassword, newPassword, token);
 };
 
-export const resendConfirmation = async (source: ISource, body) => {
+export const resendConfirmation = async (source: ISource, body: Partial<IUser>) => {
   const { email } = body;
   return cognitoUtils.resendConfirmation(email, cognito[source].ClientId);
 };
@@ -73,7 +82,7 @@ export const validateToken = (source: ISource, authorization: string) => {
   });
 };
 
-export const refreshToken = (source: ISource, body) => {
+export const refreshToken = (source: ISource, body: Partial<IUser>) => {
   const { ClientId } = cognito[source];
   const { refreshToken } = body;
   try {

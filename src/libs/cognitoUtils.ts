@@ -41,18 +41,23 @@ export const createUser = async (Username: string, UserPoolId: string = DEFAULT_
 };
 
 export const signUpUser = async (
-  Username: string,
+  email: string,
   Password: string,
+  name: string,
   ClientId: string = DEFAULT_USER_CLIENT_ID
 ): Promise<unknown> => {
   const SignUpCommandInput = {
     ClientId,
-    Username,
+    Username: email,
     Password,
     UserAttributes: [
       {
         Name: 'email',
-        Value: Username,
+        Value: email,
+      },
+      {
+        Name: 'name',
+        Value: name,
       },
     ],
   };

@@ -7,13 +7,13 @@ export default {
     {
       http: {
         method: 'any',
-        path: 'instructors',
+        path: 'personals-api',
       },
     },
     {
       http: {
         method: 'any',
-        path: 'instructors/{proxy+}',
+        path: 'personals-api/{proxy+}',
       },
     },
   ],

@@ -1,11 +1,20 @@
-import { PostConfirmationTriggerEvent } from 'aws-lambda';
+import { connect } from '@libs/mongooseHelper';
+import { PostConfirmationTriggerEvent, PostConfirmationTriggerHandler } from 'aws-lambda';
+import * as personalsService from '@functions/personals-api/personalsService';
 
-export const run: any = async (event: PostConfirmationTriggerEvent) => {
+export const run: PostConfirmationTriggerHandler = async (event: PostConfirmationTriggerEvent) => {
+  await connect();
   try {
     console.log(JSON.stringify(event));
+    await personalsService.create({
+      email: event.request.userAttributes.email,
+      name: event.request.userAttributes.name,
+      cognitoId: event.userName,
+    });
 
     return event;
   } catch (error) {
     console.log('post confirmation trigger error', error);
+    throw new Error(error);
   }
 };
