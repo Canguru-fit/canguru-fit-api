@@ -3,7 +3,7 @@ import * as personalsController from './personalsController';
 
 const router = Router();
 
-router.use('/instructors', router);
+router.use('/personals-api', router);
 router.get('/', personalsController.read);
 router.get('/:id', personalsController.readOne);
 router.post('', personalsController.create);
