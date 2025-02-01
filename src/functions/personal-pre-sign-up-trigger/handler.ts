@@ -1,12 +1,15 @@
 import { linkProviderUser } from '@libs/cognitoUtils';
+import { connect } from '@libs/mongooseHelper';
 import personalsModel from '@schemas/personals.model';
-
 import { PreSignUpTriggerEvent } from '@types/aws-lambda';
+
+let conn = null;
 
 export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEvent> = async (
   event: PreSignUpTriggerEvent
 ) => {
   try {
+    conn = conn || (await connect());
     console.log(JSON.stringify(event));
     if (event.triggerSource === 'PreSignUp_ExternalProvider') {
       const { email } = event.request.userAttributes;
