@@ -2,7 +2,7 @@ import { Schema, InferSchemaType, model } from 'mongoose';
 
 const personal = new Schema(
   {
-    email: String,
+    email: { type: String, unique: true },
     name: String,
     cref: String,
     phone: String,
