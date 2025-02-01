@@ -7,28 +7,28 @@ import { PreSignUpTriggerEvent, PreSignUpTriggerHandler } from '@types/aws-lambd
 let conn = null;
 
 export const run: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEvent, _context, callback) => {
-  try {
-    console.log(JSON.stringify(event));
+  // try {
+  console.log(JSON.stringify(event));
 
-    conn = conn || (await connect());
+  conn = conn || (await connect());
 
-    const { email } = event.request.userAttributes;
-    const personal = await personalsModel.findOne({ email });
+  const { email } = event.request.userAttributes;
+  const personal = await personalsModel.findOne({ email });
 
-    if (event.triggerSource === 'PreSignUp_ExternalProvider') {
-      if (personal) {
-        const [, googleUserName] = event.userName.split('_');
-        await linkProviderUser(email, googleUserName, event.userPoolId, 'Google');
-      }
-    } else if (event.triggerSource === 'PreSignUp_SignUp') {
-      if (personal?.cognitoId?.includes('google')) {
-        callback(new Exception(Exception.USER_FROM_EXTERNAL_PROVIDER), event);
-      }
+  if (event.triggerSource === 'PreSignUp_ExternalProvider') {
+    if (personal) {
+      const [, googleUserName] = event.userName.split('_');
+      await linkProviderUser(email, googleUserName, event.userPoolId, 'Google');
     }
-
-    callback(null, event);
-  } catch (error) {
-    console.log('post confirmation trigger error', error);
-    callback(error, event);
+  } else if (event.triggerSource === 'PreSignUp_SignUp') {
+    if (personal?.cognitoId?.includes('google')) {
+      throw new Exception(Exception.USER_FROM_EXTERNAL_PROVIDER);
+    }
   }
+
+  return event;
+  // } catch (error) {
+  //   console.log('post confirmation trigger error', error);
+  //   throw new Error(error);
+  // }
 };
