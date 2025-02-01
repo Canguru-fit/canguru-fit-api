@@ -39,7 +39,7 @@ export const signUp = async (source: ISource, body: Partial<IUser>) => {
     return cognitoUtils.signUpUser(email?.toLowerCase(), password, name, ClientId);
   } catch (error) {
     if (error.name === 'UsernameExistsException') throw new Exception(Exception.USER_ALREADY_EXIST);
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -71,19 +71,16 @@ export const resendConfirmation = async (source: ISource, body: Partial<IUser>) 
 export const login = async (source: ISource, body: { email: string; password: string }) => {
   const { ClientId, database } = cognito[source];
   const { email, password } = body;
-  try {
-    const cognitoAuth = await cognitoUtils.initiateAuth(
-      {
-        USERNAME: email,
-        PASSWORD: password,
-      },
-      ClientId
-    );
-    const user = await database.findOne({ email });
-    return { ...cognitoAuth, ...user.toObject() };
-  } catch (error) {
-    throw Error(error);
-  }
+
+  const cognitoAuth = await cognitoUtils.initiateAuth(
+    {
+      USERNAME: email,
+      PASSWORD: password,
+    },
+    ClientId
+  );
+  const user = await database.findOne({ email });
+  return { ...cognitoAuth, ...user.toObject() };
 };
 
 export const validateToken = (source: ISource, authorization: string) => {
@@ -96,9 +93,6 @@ export const validateToken = (source: ISource, authorization: string) => {
 export const refreshToken = (source: ISource, body: Partial<IUser>) => {
   const { ClientId } = cognito[source];
   const { refreshToken } = body;
-  try {
-    return cognitoUtils.initiateAuth({ REFRESH_TOKEN: refreshToken }, ClientId, 'REFRESH_TOKEN');
-  } catch (error) {
-    throw Error(error);
-  }
+
+  return cognitoUtils.initiateAuth({ REFRESH_TOKEN: refreshToken }, ClientId, 'REFRESH_TOKEN');
 };
