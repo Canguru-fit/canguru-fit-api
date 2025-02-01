@@ -1,10 +1,7 @@
-import { connect } from '@libs/mongooseHelper';
 import { PostConfirmationTriggerEvent, PostConfirmationTriggerHandler } from 'aws-lambda';
 import * as personalsService from '@functions/personals-api/personalsService';
 
 export const run: PostConfirmationTriggerHandler = async (event: PostConfirmationTriggerEvent) => {
-  await connect();
-
   try {
     console.log(JSON.stringify(event));
     if (event.triggerSource === 'PostConfirmation_ConfirmSignUp') {

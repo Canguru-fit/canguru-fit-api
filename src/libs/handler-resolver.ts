@@ -4,6 +4,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import 'express-async-errors';
 import errorMiddleware from './ErrorMiddleware';
+import { connect } from './mongooseHelper';
+
+let conn = null;
 
 export const handlerPath = (context: string) => {
   return `${context.split(process.cwd())[1].substring(1).replace(/\\/g, '/')}`;
@@ -11,6 +14,7 @@ export const handlerPath = (context: string) => {
 
 export const generateHandler = async (router: Router): Promise<Handler> => {
   try {
+    conn = conn || (await connect());
     const app = express();
     app.use(cors());
 

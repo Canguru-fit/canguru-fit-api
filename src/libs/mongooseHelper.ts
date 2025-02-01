@@ -5,7 +5,7 @@ let conn = null;
 const uri = process.env.MONGODB_URL;
 
 export const connect = async () => {
-  if (conn == null) {
+  if (conn == null || conn?.connection?.readyState !== 1) {
     conn = mongoose
       .connect(uri, {
         serverSelectionTimeoutMS: 5000,
