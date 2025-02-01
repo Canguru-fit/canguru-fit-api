@@ -4,13 +4,16 @@ import * as personalsService from '@functions/personals-api/personalsService';
 
 export const run: PostConfirmationTriggerHandler = async (event: PostConfirmationTriggerEvent) => {
   await connect();
+
   try {
     console.log(JSON.stringify(event));
-    await personalsService.create({
-      email: event.request.userAttributes.email,
-      name: event.request.userAttributes.name,
-      cognitoId: event.userName,
-    });
+    if (event.triggerSource === 'PostConfirmation_ConfirmSignUp') {
+      await personalsService.create({
+        email: event.request.userAttributes.email,
+        name: event.request.userAttributes.name,
+        cognitoId: event.userName,
+      });
+    }
 
     return event;
   } catch (error) {
