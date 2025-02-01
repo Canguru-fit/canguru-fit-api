@@ -9,16 +9,19 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
   event: PreSignUpTriggerEvent
 ) => {
   try {
-    conn = conn || (await connect());
     console.log(JSON.stringify(event));
-    if (event.triggerSource === 'PreSignUp_ExternalProvider') {
-      const { email } = event.request.userAttributes;
-      const personal = await personalsModel.findOne({ email });
 
-      if (personal) {
+    conn = conn || (await connect());
+
+    const { email } = event.request.userAttributes;
+
+    const personal = await personalsModel.findOne({ email });
+    if (personal) {
+      if (event.triggerSource === 'PreSignUp_ExternalProvider') {
         const [, googleUserName] = event.userName.split('_');
-        const linkOutput = await linkProviderUser(email, googleUserName, event.userPoolId);
-        console.log('linkOutput', linkOutput);
+        await linkProviderUser(email, googleUserName, event.userPoolId, 'Google', 'Cognito');
+      } else {
+        await linkProviderUser(email, event.userName, event.userPoolId, 'Cognito', 'Google');
       }
     }
 

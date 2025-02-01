@@ -8,9 +8,10 @@ export const run: PostConfirmationTriggerHandler = async (event: PostConfirmatio
     conn = conn || (await connect());
     console.log(JSON.stringify(event));
     if (event.triggerSource === 'PostConfirmation_ConfirmSignUp') {
+      const { email, name, given_name = '', family_name = '' } = event.request.userAttributes;
       await personalsService.create({
-        email: event.request.userAttributes.email,
-        name: event.request.userAttributes.name,
+        email,
+        name: name || `${given_name} ${family_name}`,
         cognitoId: event.userName,
       });
     }
