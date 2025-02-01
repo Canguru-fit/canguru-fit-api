@@ -1,5 +1,6 @@
 import * as cognitoUtils from '@libs/cognitoUtils';
 import Exception from '@libs/Exceptions';
+import { personalsModel, studentsModel } from '@schemas/index';
 
 type ISource = 'personal' | 'student';
 type IUser = {
@@ -17,10 +18,12 @@ const cognito = {
   personal: {
     UserPoolId: process.env.AWS_COGNITO_PERSONAL_POOL_ID,
     ClientId: process.env.AWS_COGNITO_PERSONAL_CLIENT_ID,
+    database: personalsModel,
   },
   student: {
     UserPoolId: process.env.AWS_COGNITO_POOL_ID,
     ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+    database: studentsModel,
   },
 };
 
@@ -49,9 +52,9 @@ export const confirmForgotPassword = async (source: ISource, body: Partial<IUser
   return cognitoUtils.confirmForgotPassword(code, email, password, cognito[source].ClientId);
 };
 
-export const changePassword = async (source: ISource, body: Partial<IUser>) => {
-  const { previousPassword, newPassword, token } = body;
-  return cognitoUtils.changePassword(previousPassword, newPassword, token);
+export const changePassword = async (authorization, body: Partial<IUser>) => {
+  const { previousPassword, newPassword } = body;
+  return cognitoUtils.changePassword(previousPassword, newPassword, authorization.split(' ')[1]);
 };
 
 export const resendConfirmation = async (source: ISource, body: Partial<IUser>) => {
@@ -59,17 +62,19 @@ export const resendConfirmation = async (source: ISource, body: Partial<IUser>) 
   return cognitoUtils.resendConfirmation(email, cognito[source].ClientId);
 };
 
-export const login = (source: ISource, body: { email: string; password: string }) => {
-  const { ClientId } = cognito[source];
+export const login = async (source: ISource, body: { email: string; password: string }) => {
+  const { ClientId, database } = cognito[source];
   const { email, password } = body;
   try {
-    return cognitoUtils.initiateAuth(
+    const cognitoAuth = await cognitoUtils.initiateAuth(
       {
         USERNAME: email,
         PASSWORD: password,
       },
       ClientId
     );
+    const user = await database.findOne({ email });
+    return { ...cognitoAuth, ...user.toObject() };
   } catch (error) {
     throw Error(error);
   }

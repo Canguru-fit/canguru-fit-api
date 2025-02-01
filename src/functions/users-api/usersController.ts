@@ -20,7 +20,7 @@ export const confirmForgotPassword = async (req: Request, res: Response): Promis
 };
 
 export const changePassword = async (req: Request, res: Response): Promise<Response> => {
-  return res.send(await usersService.changePassword(req.params.source as unknown as 'personal' | 'student', req.body));
+  return res.send(await usersService.changePassword(req.headers.authorization, req.body));
 };
 
 export const resendConfirmation = async (req: Request, res: Response): Promise<Response> => {
