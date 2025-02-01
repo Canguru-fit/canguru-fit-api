@@ -13,16 +13,13 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
 
     conn = conn || (await connect());
 
-    const { email } = event.request.userAttributes;
+    if (event.triggerSource === 'PreSignUp_ExternalProvider') {
+      const { email } = event.request.userAttributes;
 
-    const personal = await personalsModel.findOne({ email });
-    if (personal) {
-      if (event.triggerSource === 'PreSignUp_ExternalProvider') {
+      const personal = await personalsModel.findOne({ email });
+      if (personal) {
         const [, googleUserName] = event.userName.split('_');
         await linkProviderUser(email, googleUserName, event.userPoolId, 'Google');
-      } else {
-        const [, googleUserName] = personal.cognitoId.split('_');
-        await linkProviderUser(googleUserName, event.userName, event.userPoolId, 'Cognito', 'Gooogle');
       }
     }
 
