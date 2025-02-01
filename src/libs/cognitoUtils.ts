@@ -215,7 +215,7 @@ export const linkProviderUser = async (
   Username: string,
   ProviderValue: string,
   UserPoolId: string = DEFAULT_USER_POOL_ID,
-  sourceProviderName: string = 'Google'
+  ProviderName: string = 'Google'
 ): Promise<AdminLinkProviderForUserCommandOutput> => {
   const command = new AdminLinkProviderForUserCommand({
     UserPoolId,
@@ -224,7 +224,7 @@ export const linkProviderUser = async (
       ProviderAttributeValue: Username,
     },
     SourceUser: {
-      ProviderName: sourceProviderName,
+      ProviderName,
       ProviderAttributeName: 'Cognito_Subject',
       ProviderAttributeValue: ProviderValue,
     },
