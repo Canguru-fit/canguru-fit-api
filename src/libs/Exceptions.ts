@@ -26,6 +26,12 @@ class Exception extends Error {
     code: '001',
   };
 
+  public static readonly USER_FROM_EXTERNAL_PROVIDER = {
+    message: 'Email used from an external provider',
+    status: 404,
+    code: '002',
+  };
+
   public static readonly DATA_NOT_FOUND = {
     message: 'Data not found',
     status: 404,
