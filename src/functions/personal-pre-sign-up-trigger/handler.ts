@@ -22,13 +22,13 @@ export const run: PreSignUpTriggerHandler = async (event: PreSignUpTriggerEvent,
       }
     } else if (event.triggerSource === 'PreSignUp_SignUp') {
       if (personal?.cognitoId?.includes('google')) {
-        throw new Exception(Exception.USER_FROM_EXTERNAL_PROVIDER);
+        callback(new Exception(Exception.USER_FROM_EXTERNAL_PROVIDER), event);
       }
     }
 
-    return event;
+    callback(null, event);
   } catch (error) {
     console.log('post confirmation trigger error', error);
-    throw error;
+    callback(error, event);
   }
 };
