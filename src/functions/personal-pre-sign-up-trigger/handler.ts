@@ -19,15 +19,15 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
     if (personal) {
       if (event.triggerSource === 'PreSignUp_ExternalProvider') {
         const [, googleUserName] = event.userName.split('_');
-        await linkProviderUser(email, googleUserName, event.userPoolId, 'Google', 'Cognito');
+        await linkProviderUser(email, googleUserName, event.userPoolId, 'Google');
       } else {
-        await linkProviderUser(event.userName, email, event.userPoolId, 'Cognito', 'Google');
+        await linkProviderUser(event.userName, email, event.userPoolId, 'Cognito');
       }
     }
 
     return event;
   } catch (error) {
     console.log('post confirmation trigger error', error);
-    throw new Error(error);
+    throw error;
   }
 };
