@@ -15,6 +15,7 @@ import {
   ResendConfirmationCodeCommand,
   AdminLinkProviderForUserCommand,
   ChangePasswordCommand,
+  AdminLinkProviderForUserCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
@@ -215,7 +216,7 @@ export const linkProviderUser = async (
   ProviderValue: string,
   UserPoolId: string = DEFAULT_USER_POOL_ID,
   ProviderName: string = 'Google'
-): Promise<any> => {
+): Promise<AdminLinkProviderForUserCommandOutput> => {
   const command = new AdminLinkProviderForUserCommand({
     UserPoolId,
     DestinationUser: {

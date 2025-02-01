@@ -9,12 +9,13 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
   try {
     console.log(JSON.stringify(event));
     if (event.triggerSource === 'PreSignUp_ExternalProvider') {
-      const personal = await personalsModel.findOne({ email: event.request.userAttributes.email });
+      const { email } = event.request.userAttributes;
+      const personal = await personalsModel.findOne({ email });
 
       if (personal) {
         const [, googleUserName] = event.userName.split('_');
-        await linkProviderUser(event.request.userAttributes.email, googleUserName, event.userPoolId);
-        return event;
+        const linkOutput = await linkProviderUser(email, googleUserName, event.userPoolId);
+        console.log('linkOutput', linkOutput);
       }
     }
 
