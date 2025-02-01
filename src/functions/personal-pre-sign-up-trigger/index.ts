@@ -12,5 +12,13 @@ export default {
         forceDeploy: true,
       },
     },
+    {
+      cognitoUserPool: {
+        pool: process.env.NODE_ENV !== 'prod' ? `canguru-fit-${process.env.NODE_ENV}` : 'canguru-fit',
+        trigger: 'PreSignUp' as const,
+        existing: true,
+        forceDeploy: true,
+      },
+    },
   ],
 };

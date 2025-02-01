@@ -1,5 +1,5 @@
 import { linkProviderUser } from '@libs/cognitoUtils';
-import personalsModel from '@schemas/personals.model';
+import studentsModel from '@schemas/students.model';
 import { PreSignUpTriggerEvent } from '@types/aws-lambda';
 
 export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEvent> = async (
@@ -8,11 +8,11 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
   try {
     console.log(JSON.stringify(event));
     if (event.triggerSource === 'PreSignUp_ExternalProvider') {
-      const personal = await personalsModel.findOne({ email: event.request.userAttributes.email });
+      const student = await studentsModel.findOne({ email: event.request.userAttributes.email });
 
-      if (personal) {
+      if (student) {
         const [, googleUserName] = event.userName.split('_');
-        await linkProviderUser(event.request.userAttributes.email, googleUserName);
+        await linkProviderUser(event.request.userAttributes.email, googleUserName, event.userPoolId);
         return event;
       }
     }
