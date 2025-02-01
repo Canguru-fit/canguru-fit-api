@@ -21,7 +21,7 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
         const [, googleUserName] = event.userName.split('_');
         await linkProviderUser(email, googleUserName, event.userPoolId, 'Google', 'Cognito');
       } else {
-        await linkProviderUser(email, event.userName, event.userPoolId, 'Cognito', 'Google');
+        await linkProviderUser(event.userName, email, event.userPoolId, 'Cognito', 'Google');
       }
     }
 
