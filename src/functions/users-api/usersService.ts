@@ -27,10 +27,16 @@ const cognito = {
   },
 };
 
-export const signUp = (source: ISource, body: Partial<IUser>) => {
+export const signUp = async (source: ISource, body: Partial<IUser>) => {
   const { email, password, name } = body;
+  const { ClientId, database } = cognito[source];
   try {
-    return cognitoUtils.signUpUser(email?.toLowerCase(), password, name, cognito[source].ClientId);
+    const foundUser = await database.findOne({ email });
+    if (foundUser) {
+      if (foundUser?.cognitoId?.includes('google')) throw new Exception(Exception.USER_FROM_EXTERNAL_PROVIDER);
+      throw new Exception(Exception.USER_ALREADY_EXIST);
+    }
+    return cognitoUtils.signUpUser(email?.toLowerCase(), password, name, ClientId);
   } catch (error) {
     if (error.name === 'UsernameExistsException') throw new Exception(Exception.USER_ALREADY_EXIST);
     throw Error(error);
