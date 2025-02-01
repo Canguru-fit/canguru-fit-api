@@ -22,7 +22,7 @@ export const run: (event: PreSignUpTriggerEvent) => Promise<PreSignUpTriggerEven
         await linkProviderUser(email, googleUserName, event.userPoolId, 'Google');
       } else {
         const [, googleUserName] = personal.cognitoId.split('_');
-        await linkProviderUser(googleUserName, event.userName, event.userPoolId, 'Cognito');
+        await linkProviderUser(googleUserName, event.userName, event.userPoolId, 'Cognito', 'Gooogle');
       }
     }
 
