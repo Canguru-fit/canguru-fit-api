@@ -91,7 +91,7 @@ export const login = async (source: ISource, body: { email: string; password: st
   );
   if (cognitoAuth instanceof Object) {
     const user = await database.findOne({ email });
-    return { ...cognitoAuth, user: user.toObject() };
+    return { ...cognitoAuth, ...user.toObject() };
   }
   return { code: cognitoAuth };
 };
@@ -103,9 +103,14 @@ export const validateToken = (authorization: string) => {
   });
 };
 
-export const refreshToken = (source: ISource, body: Partial<IUser>) => {
-  const { ClientId } = cognito[source];
-  const { refreshToken } = body;
+export const refreshToken = async (source: ISource, body: Partial<IUser>) => {
+  const { ClientId, database } = cognito[source];
+  const { refreshToken, email } = body;
 
-  return cognitoUtils.initiateAuth({ REFRESH_TOKEN: refreshToken }, ClientId, 'REFRESH_TOKEN');
+  const cognitoAuth = await cognitoUtils.initiateAuth({ REFRESH_TOKEN: refreshToken }, ClientId, 'REFRESH_TOKEN');
+  if (cognitoAuth instanceof Object) {
+    const user = await database.findOne({ email });
+    return { ...cognitoAuth, user: user.toObject() };
+  }
+  return { code: cognitoAuth };
 };

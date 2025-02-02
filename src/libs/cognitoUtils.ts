@@ -45,6 +45,7 @@ export const createUser = async (
     Username: email,
     UserAttributes: [
       { Name: 'email', Value: email },
+      { Name: 'email_verified', Value: 'true' },
       { Name: 'name', Value: name },
     ],
     DesiredDeliveryMediums: ['EMAIL'],

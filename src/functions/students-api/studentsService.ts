@@ -1,21 +1,18 @@
 import { createUser } from '@libs/cognitoUtils';
 import Exception from '@libs/Exceptions';
-import { Personal, personalsModel, Student, studentsModel } from '@schemas/index';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IUser = (Personal | Student) & { _id: any };
+import { personalsModel, Student, studentsModel } from '@schemas/index';
 
 export const readOne = async (id: string): Promise<Student> => {
   return studentsModel.findById(id);
 };
 
-export const read = async (user: IUser): Promise<Student[]> => {
-  return studentsModel.find({ personals: user?._id });
+export const read = async (personalId): Promise<Student[]> => {
+  return studentsModel.find({ personals: personalId });
 };
 
-export const create = async (user: IUser, data: Student): Promise<Student> => {
+export const create = async (personalId, data: Student): Promise<Student> => {
   const { email, name } = data;
-  const personalId = user._id;
+
   const foundStudent = await studentsModel.findOne({ email });
   if (foundStudent) {
     if (foundStudent.personals.includes(personalId)) throw new Exception(Exception.USER_ALREADY_EXIST);
@@ -36,7 +33,7 @@ export const update = async (id: string, data: Partial<Student & { _id: string }
   return studentsModel.findOneAndUpdate({ _id }, dataObj, { new: true });
 };
 
-export const remove = async (user: IUser, id: string): Promise<Student> => {
-  await personalsModel.findByIdAndUpdate(user._id, { $pull: { students: id } }, { new: true });
-  return studentsModel.findByIdAndUpdate(id, { $pull: { personals: user._id } }, { new: true });
+export const remove = async (personalId, id: string): Promise<Student> => {
+  await personalsModel.findByIdAndUpdate(personalId, { $pull: { students: id } }, { new: true });
+  return studentsModel.findByIdAndUpdate(id, { $pull: { personals: personalId } }, { new: true });
 };
