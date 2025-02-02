@@ -1,13 +1,14 @@
 import { Router } from 'express';
+import authMiddleware from '@libs/authMiddleware';
 import * as studentsController from './studentsController';
 
 const router = Router();
 
-router.use('/exercises-api', router);
-router.get('/', studentsController.read);
-router.get('/:id', studentsController.readOne);
-router.post('', studentsController.create);
-router.put('/:id', studentsController.update);
-router.delete('/:id', studentsController.remove);
+router.use('/students-api', router);
+router.get('/', authMiddleware, studentsController.read);
+router.get('/:id', authMiddleware, studentsController.readOne);
+router.post('', authMiddleware, studentsController.create);
+router.put('/:id', authMiddleware, studentsController.update);
+router.delete('/:id', authMiddleware, studentsController.remove);
 
 export default router;

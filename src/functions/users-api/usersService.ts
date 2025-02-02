@@ -2,7 +2,8 @@ import * as cognitoUtils from '@libs/cognitoUtils';
 import Exception from '@libs/Exceptions';
 import { personalsModel, studentsModel } from '@schemas/index';
 
-type ISource = 'personal' | 'student';
+export type ISource = 'personal' | 'student';
+
 type IUser = {
   email: string;
   name: string;
@@ -58,8 +59,17 @@ export const confirmForgotPassword = async (source: ISource, body: Partial<IUser
   return cognitoUtils.confirmForgotPassword(code, email, password, cognito[source].ClientId);
 };
 
-export const changePassword = async (authorization, body: Partial<IUser>) => {
-  const { previousPassword, newPassword } = body;
+export const changePassword = async (source: ISource, authorization, body: Partial<IUser>) => {
+  const { previousPassword, newPassword, email } = body;
+  if (source === 'student' && !authorization) {
+    return cognitoUtils.changeFirstPassword(
+      email,
+      previousPassword,
+      newPassword,
+      process.env.AWS_COGNITO_CLIENT_ID,
+      process.env.AWS_COGNITO_POOL_ID
+    );
+  }
   return cognitoUtils.changePassword(previousPassword, newPassword, authorization.split(' ')[1]);
 };
 
@@ -79,12 +89,15 @@ export const login = async (source: ISource, body: { email: string; password: st
     },
     ClientId
   );
-  const user = await database.findOne({ email });
-  return { ...cognitoAuth, ...user.toObject() };
+  if (cognitoAuth instanceof Object) {
+    const user = await database.findOne({ email });
+    return { ...cognitoAuth, user: user.toObject() };
+  }
+  return { code: cognitoAuth };
 };
 
-export const validateToken = (source: ISource, authorization: string) => {
-  return cognitoUtils.verifyToken(authorization, cognito[source].UserPoolId).catch((error) => {
+export const validateToken = (authorization: string) => {
+  return cognitoUtils.verifyToken(authorization).catch((error) => {
     console.log(error);
     throw new Exception(Exception.UNAUTHORIZED);
   });
