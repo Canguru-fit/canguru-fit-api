@@ -15,6 +15,7 @@ const personal = new Schema(
     district: String,
     city: String,
     state: String,
+    country: String,
     cognitoId: String,
     status: Boolean,
     lastLogin: Date,
@@ -22,6 +23,12 @@ const personal = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'student',
+      },
+    ],
+    workouts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'workouts',
       },
     ],
     routines: [
@@ -36,6 +43,9 @@ const personal = new Schema(
     timestamps: true,
   }
 );
+
+personal.index({ cognitoId: 1 });
+personal.index({ studentes: 1 });
 
 export type Personal = InferSchemaType<typeof personal>;
 

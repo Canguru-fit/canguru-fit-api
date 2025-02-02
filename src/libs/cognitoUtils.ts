@@ -16,25 +16,38 @@ import {
   AdminLinkProviderForUserCommand,
   ChangePasswordCommand,
   AdminLinkProviderForUserCommandOutput,
+  AdminCreateUserCommandInput,
+  AdminSetUserPasswordCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
+import jwkToPem from 'jwk-to-pem';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
 import Exception from './Exceptions';
 
 const DEFAULT_USER_POOL_ID = process.env.AWS_COGNITO_PERSONAL_POOL_ID;
 const DEFAULT_USER_CLIENT_ID = process.env.AWS_COGNITO_PERSONAL_CLIENT_ID;
 
+const PoolIdByClient = (clientId) => {
+  if (clientId === process.env.AWS_COGNITO_PERSONAL_CLIENT_ID) return process.env.AWS_COGNITO_PERSONAL_POOL_ID;
+  if (clientId === process.env.AWS_COGNITO_CLIENT_ID) return process.env.AWS_COGNITO_POOL_ID;
+  return null;
+};
+
 const client = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 client.config.credentials();
 
-export const createUser = async (Username: string, UserPoolId: string = DEFAULT_USER_POOL_ID): Promise<unknown> => {
-  const createUserCommandInput = {
+export const createUser = async (
+  email: string,
+  name: string,
+  UserPoolId: string = DEFAULT_USER_POOL_ID
+): Promise<unknown> => {
+  const createUserCommandInput: AdminCreateUserCommandInput = {
     UserPoolId,
-    Username,
+    Username: email,
     UserAttributes: [
-      { Name: 'email', Value: Username },
-      { Name: 'email_verified', Value: 'true' },
+      { Name: 'email', Value: email },
+      { Name: 'name', Value: name },
     ],
+    DesiredDeliveryMediums: ['EMAIL'],
   };
 
   const command = new AdminCreateUserCommand(createUserCommandInput);
@@ -139,33 +152,30 @@ export const initiateAuth = async (
   });
 
   const response = await client.send(command);
-  return response.AuthenticationResult;
+  return response.AuthenticationResult || response.ChallengeName;
 };
 
-export const verifyToken = async (authorization, UserPoolId = DEFAULT_USER_POOL_ID) => {
-  const jwkClient = jwksClient({
-    jwksUri: `https://cognito-idp.us-east-1.amazonaws.com/${UserPoolId}/.well-known/jwks.json`,
-  });
-
-  const getKey = (header: jwt.JwtHeader, callback: jwt.SigningKeyCallback): void => {
-    jwkClient.getSigningKey(header.kid, (err, key) => {
-      if (err) {
-        callback(err, null);
-        return;
-      }
-      const signingKey = key.getPublicKey();
-      callback(null, signingKey);
-    });
-  };
-
-  const token = authorization?.split(' ')?.[1] || '';
+export const verifyToken = async (authorization): Promise<(JwtPayload & { UserPoolId: string }) | undefined> => {
+  const [, token] = authorization?.split(' ') || [];
 
   if (!token) throw new Exception(Exception.UNAUTHORIZED);
 
+  const decodedJwt = jwt.decode(token, { complete: true }) as { payload: JwtPayload; header: { kid: string } };
+  const UserPoolId = PoolIdByClient(decodedJwt.payload.client_id);
+  if (!UserPoolId) throw new Exception(Exception.UNAUTHORIZED);
+
+  const response = await fetch(`https://cognito-idp.us-east-1.amazonaws.com/${UserPoolId}/.well-known/jwks.json`).then(
+    (res) => res.json()
+  );
+  if (!response) throw new Error('Error! Unable to download JWKs');
+
+  const jwk = response as { keys: jwkToPem.JWK[] };
+  const pem = jwkToPem(jwk.keys[1] as jwkToPem.JWK);
+
   return new Promise((resolve, reject) => {
-    jwt.verify(token, getKey, { algorithms: ['RS256'] }, async (err, decoded: JwtPayload | undefined) => {
+    jwt.verify(token, pem, { algorithms: ['RS256'] }, async (err, decoded: JwtPayload | undefined) => {
       if (err) return reject(err);
-      return resolve(decoded);
+      return resolve({ ...decoded, UserPoolId });
     });
   });
 };
@@ -230,4 +240,34 @@ export const linkProviderUser = async (
     },
   });
   return client.send(command);
+};
+
+export const changeFirstPassword = async (
+  username,
+  oldPassword,
+  newPassword,
+  ClientId = DEFAULT_USER_CLIENT_ID,
+  UserPoolId = DEFAULT_USER_POOL_ID
+) => {
+  const checkUser = await initiateAuth(
+    {
+      USERNAME: username,
+      PASSWORD: oldPassword,
+    },
+    ClientId
+  );
+  if (checkUser !== 'NEW_PASSWORD_REQUIRED') throw new Exception(Exception.UNAUTHORIZED);
+  const updatePasswordCommandInput: AdminSetUserPasswordCommandInput = {
+    UserPoolId,
+    Password: newPassword,
+    Username: username,
+    Permanent: true,
+  };
+
+  const command = new AdminSetUserPasswordCommand(updatePasswordCommandInput);
+  const output = await client.send(command);
+  if (output.$metadata.httpStatusCode !== 200) {
+    throw new Error(`Error changing password`);
+  }
+  return output;
 };
