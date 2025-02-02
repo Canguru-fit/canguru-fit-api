@@ -13,7 +13,7 @@ export const create = async (body): Promise<Personal> => {
 };
 
 export const update = async (_id: string, user: Personal): Promise<Personal> => {
-  return personalsModel.findOneAndUpdate({ _id }, user);
+  return personalsModel.findOneAndUpdate({ _id }, user, { new: true });
 };
 
 export const remove = async (id: string): Promise<Personal> => {
