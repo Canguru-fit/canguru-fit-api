@@ -18,6 +18,7 @@ import {
   AdminLinkProviderForUserCommandOutput,
   AdminCreateUserCommandInput,
   AdminSetUserPasswordCommandInput,
+  AdminCreateUserCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import jwkToPem from 'jwk-to-pem';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -39,7 +40,7 @@ export const createUser = async (
   email: string,
   name: string,
   UserPoolId: string = DEFAULT_USER_POOL_ID
-): Promise<unknown> => {
+): Promise<AdminCreateUserCommandOutput> => {
   const createUserCommandInput: AdminCreateUserCommandInput = {
     UserPoolId,
     Username: email,
